@@ -22,10 +22,10 @@
 
             <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
 
-                <i class="bi bi-bootstrap fs-2 me-2"></i>
+                <i class="bi bi-basket-fill fs-2 me-2"></i>
 
                 <span class="fs-4 fw-bold">
-                    Barra lateral
+                    Sistema da Loja
                 </span>
 
             </a>
@@ -36,23 +36,11 @@
 
                 <li class="nav-item">
 
-                    <a href="#" class="nav-link active">
+                    <a href="dashboard.php" class="nav-link active">
 
-                        <i class="bi bi-house me-2"></i>
+                        <i class="bi bi-columns-gap me-2"></i>
 
-                        Lar
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="#" class="nav-link text-white">
-
-                        <i class="bi bi-speedometer2 me-2"></i>
-
-                        Painel
+                        Dashboard
 
                     </a>
 
@@ -60,11 +48,11 @@
 
                 <li>
 
-                    <a href="#" class="nav-link text-white">
+                    <a href="vendas.php" class="nav-link text-white">
 
-                        <i class="bi bi-table me-2"></i>
+                        <i class="bi bi-cart2 me-2"></i>
 
-                        Pedidos
+                        Vendas
 
                     </a>
 
@@ -72,9 +60,21 @@
 
                 <li>
 
-                    <a href="#" class="nav-link text-white">
+                    <a href="clientes.php" class="nav-link text-white">
 
-                        <i class="bi bi-grid me-2"></i>
+                        <i class="bi bi-person-fill me-2"></i>
+
+                        Clientes
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="produtos.php" class="nav-link text-white">
+
+                        <i class="bi bi-box-seam-fill me-2"></i>
 
                         Produtos
 
@@ -84,11 +84,11 @@
 
                 <li>
 
-                    <a href="#" class="nav-link text-white">
+                    <a href="consulta_pontos.php" class="nav-link text-white">
 
-                        <i class="bi bi-people me-2"></i>
+                        <i class="bi bi-star-fill me-2"></i>
 
-                        Clientes
+                        Consulta de Pontos
 
                     </a>
 
@@ -104,20 +104,13 @@
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     data-bs-toggle="dropdown">
 
-                    <img src="https://github.com/mdo.png" width="32" height="32" class="rounded-circle me-2">
-
-                    <strong>mdo</strong>
+                    <i class="bi bi-person-circle fs-2 rounded-circle me-2"></i>
+                    <strong>Nome Usuario</strong>
 
                 </a>
 
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            Novo projeto
-                        </a>
-                    </li>
-
+        
                     <li>
                         <a class="dropdown-item" href="#">
                             Configurações

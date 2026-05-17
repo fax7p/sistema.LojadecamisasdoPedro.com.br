@@ -11,6 +11,13 @@
 
 <body>
 
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Location: pagina2.php');
+    exit;
+}
+?>
+
     <div class="container-page">
 
         <div class="image-side"><img src="img/fundo_login.jpeg" class="img-fluid img-bg fs-1"></div>  
@@ -38,8 +45,8 @@
                         <input type="password" class="form-control" placeholder="Digite sua senha">
                     </div>
 
-                    <button class="btn-custom">
-                      <a href="pagina2.php" class="text-light">Entrar</a>
+                    <button type="submit" class="btn btn-custom text-light text-decoration-none">
+                        Entrar
                     </button>
 
                     <div class="login-link">
