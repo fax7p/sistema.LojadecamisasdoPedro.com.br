@@ -1,0 +1,29 @@
+body {
+    background-color: #f5f7fa;
+}
+
+.content {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px;
+}
+
+.card-dashboard {
+    border: none;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-5px);
+}
+
+.icon-dashboard {
+    font-size: 40px;
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+}

@@ -1,0 +1,29 @@
+body {
+            background-color: #f5f7fa;
+        }
+
+        .content {
+            width: 100%;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .card-vendas {
+            border: none;
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .card-vendas:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-card {
+            font-size: 38px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+        }

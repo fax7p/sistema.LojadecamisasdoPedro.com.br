@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <h1 class="title text-center">Camisas MP</h1>
 
-                <form>
+                <form method="POST" action="pagina2.php">
 
                     <div class="mb-3">
                         <label class="form-label">Nome</label>
