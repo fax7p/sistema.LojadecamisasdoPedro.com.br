@@ -521,15 +521,32 @@
 
         function excluirProduto(id) {
             if (confirm("Deseja realmente apagar esta camisa do catálogo?")) {
-                // 1. Apaga do Firebase (Nuvem)
+                // 1. Apaga do Firebase (Sumiço garantido na nuvem e no PC do Matheus)
                 firebaseDB.ref('produtos/' + id).remove().then(() => {
-                    // 2. Apaga do Banco Local (SQLite/Navegador)
-                    db.transaction(function(tx) {
-                        tx.executeSql('DELETE FROM produtos WHERE id = ?', [id], function() {
-                            renderizarProdutos(); // Atualiza o catálogo visualmente
-                            carregarSelectsVenda(); // Remove a camisa da tela de Nova Venda
+                    
+                    // 2. Limpa da memória quebra-galho do PC (Navegador)
+                    produtos = produtos.filter(p => p.id != id);
+                    localStorage.setItem('db_bootstrap_produtos', JSON.stringify(produtos));
+                    
+                    try {
+                        if (typeof memoriaPC !== 'undefined') {
+                            memoriaPC = memoriaPC.filter(p => p.id != id);
+                            localStorage.setItem('mock_db_pc', JSON.stringify(memoriaPC));
+                        }
+                    } catch(e) {}
+
+                    // 3. Limpa do Banco SQLite (Mobile/APK)
+                    try {
+                        db.transaction(function(tx) {
+                            tx.executeSql('DELETE FROM produtos WHERE id = ?', [id]);
+                            tx.executeSql('DELETE FROM produtos WHERE id = ?', [Number(id)]);
                         });
-                    });
+                    } catch(e) {}
+
+                    // 4. Força a atualização da tela imediatamente
+                    renderizarProdutos();
+                    carregarSelectsVenda();
+                    
                 }).catch(erro => alert("Erro ao apagar da nuvem. Verifique a internet."));
             }
         }
