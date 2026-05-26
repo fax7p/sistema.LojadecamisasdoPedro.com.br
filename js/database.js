@@ -1,62 +1,60 @@
-// Variável global para armazenar a conexão do banco de dados
-let db = null;
-
-// Espera o Cordova inicializar completamente para abrir o banco de dados
-document.addEventListener('deviceready', inicializarBancoDados, false);
+var db = null;
+var memoriaPC = []; // Vetor temporário para o Google Chrome
 
 function inicializarBancoDados() {
-    // Abre ou cria o banco de dados local chamado 'app.db'
-    db = window.sqlitePlugin.openDatabase({ name: 'app.db', location: 'default' });
+    // 1. SE ESTIVER NO CELULAR (APK): Usa o banco real do aplicativo
+    if (window.cordova && window.sqlitePlugin) {
+        console.log("Modo Mobile: Abrindo SQLite nativo...");
+        db = window.sqlitePlugin.openDatabase({ name: 'loja_final.db', location: 'default' });
 
-    db.transaction(function(tx) {
-        // Criando a Tabela de Clientes com o campo de pontos e o controle de sincronização
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS clientes (
-            id INTEGER PRIMARY KEY, 
-            nome TEXT, 
-            email TEXT, 
-            cpf TEXT, 
-            pontos INTEGER DEFAULT 0,
-            sincronizado INTEGER DEFAULT 0
-        )`);
+        db.transaction(function(tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS produtos (id INTEGER PRIMARY KEY, nome TEXT, preco REAL, foto TEXT, sincronizado INTEGER DEFAULT 0)');
+        });
+    } 
+    // 2. SE ESTIVER NO PC (Go Live): Usa o Banco Inteligente na Memória
+    else {
+        console.warn("Modo Navegador: Simulando o banco de dados na memória do PC.");
+        
+        db = {
+            transaction: function(callback) {
+                let tx = {
+                    executeSql: function(query, params, success, error) {
+                        // Se o sistema tentar SALVAR um produto
+                        if (query.includes('INSERT')) {
+                            memoriaPC.push({
+                                id: params[0],
+                                nome: params[1],
+                                preco: params[2],
+                                foto: params[3],
+                                sincronizado: 0
+                            });
+                            if (success) success(tx, { rows: { length: 0 } });
+                        } 
+                        // Se o sistema tentar LER os produtos
+                        else if (query.includes('SELECT')) {
+                            let resultadoFalso = {
+                                rows: {
+                                    length: memoriaPC.length,
+                                    item: function(i) { return memoriaPC[i]; }
+                                }
+                            };
+                            if (success) success(tx, resultadoFalso);
+                        } 
+                        // Se o sistema tentar ATUALIZAR status de sincronização
+                        else if (query.includes('UPDATE')) {
+                            if (success) success(tx, { rows: { length: 0 } });
+                        }
+                    }
+                };
+                callback(tx);
+            }
+        };
+    }
+}
 
-        // Criando a Tabela de Produtos
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS produtos (
-            id INTEGER PRIMARY KEY, 
-            nome TEXT, 
-            preco REAL, 
-            foto TEXT,
-            sincronizado INTEGER DEFAULT 0
-        )`);
-
-        // Criando a Tabela de Vendas
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS vendas (
-            id TEXT PRIMARY KEY, 
-            data TEXT, 
-            cliente TEXT, 
-            itens TEXT, 
-            total REAL,
-            sincronizado INTEGER DEFAULT 0
-        )`);
-
-        // Criando a Tabela de Brindes (Fidelidade)
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS brindes (
-            id INTEGER PRIMARY KEY, 
-            nome TEXT, 
-            custo INTEGER
-        )`);
-
-        // Criando a Tabela de Resgates Concluídos
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS resgates (
-            id INTEGER PRIMARY KEY, 
-            data TEXT, 
-            cliente TEXT, 
-            brinde TEXT, 
-            custo INTEGER,
-            sincronizado INTEGER DEFAULT 0
-        )`);
-
-        console.log("Todas as tabelas do SQLite foram criadas com sucesso!");
-    }, function(error) {
-        console.error("Erro ao criar as tabelas: " + error.message);
-    });
+// Verifica onde o app está a correr para iniciar da forma certa
+if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+    document.addEventListener("deviceready", inicializarBancoDados, false);
+} else {
+    inicializarBancoDados();
 }

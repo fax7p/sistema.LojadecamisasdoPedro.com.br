@@ -354,9 +354,12 @@
     </div>
 
     <script src="cordova.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script src="js/firebase.js"></script>
     <script src="js/database.js"></script>
-    <script src="js/sync.js"></script>
 
     <script>
         // Banco de Dados Local do Navegador (Mock) com suporte à propriedade de pontos
@@ -372,15 +375,22 @@
         let fotoBase64Tmp = "";
 
         window.onload = function () {
-            // Garantir que clientes antigos tenham a propriedade pontos iniciada
-            clientes = clientes.map(c => ({ ...c, pontos: c.pontos || 0 }));
-            localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
+    // Garantir que clientes antigos tenham a propriedade pontos iniciada
+    clientes = clientes.map(c => ({ ...c, pontos: c.pontos || 0 }));
+    localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
 
-            renderizarClientes();
+    renderizarClientes();
+    renderizarHistoricoVendas();
+    renderizarBrindesEResgates();
+
+    // Pequeno atraso (500 milissegundos) para garantir que a tabela do banco 
+    // já foi criada antes de tentar listar os produtos na tela.
+    setTimeout(function() {
+        if (db !== null) {
             renderizarProdutos();
-            renderizarHistoricoVendas();
-            renderizarBrindesEResgates();
-        };
+        }
+    }, 500);
+};
 
         /* --- LOGICA DE LOGIN --- */
         function efetuarLogin(event) {
@@ -584,9 +594,13 @@
     const grid = document.getElementById('lista-produtos-render');
     grid.innerHTML = '';
 
-    // Busca os produtos direto do SQLite
+    // Busca os produtos direto do SQLite/WebSQL
     db.transaction(function(tx) {
         tx.executeSql('SELECT * FROM produtos', [], function(tx, rs) {
+            
+            // CORREÇÃO CRUCIAL: Limpa o vetor antigo e prepara para receber os dados reais do banco
+            produtos = []; 
+
             if (rs.rows.length === 0) {
                 grid.innerHTML = `<div class="col-12"><div class="alert alert-light text-center border py-4 text-muted w-100">Nenhum produto no catálogo.</div></div>`;
                 return;
@@ -594,6 +608,10 @@
 
             for (let i = 0; i < rs.rows.length; i++) {
                 let p = rs.rows.item(i);
+                
+                // CORREÇÃO CRUCIAL: Alimenta o vetor para a tela de Vendas conseguir "enxergar" o produto
+                produtos.push(p); 
+
                 grid.innerHTML += `
                     <div class="col">
                         <div class="card h-100 shadow-sm product-card">
@@ -610,7 +628,6 @@
         });
     });
 }
-
         /* --- OPERAÇÕES: VENDAS & CARRINHO --- */
         function carregarSelectsVenda() {
             const selectCli = document.getElementById('venda-cliente');
