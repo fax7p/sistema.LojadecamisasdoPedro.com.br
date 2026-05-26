@@ -633,16 +633,18 @@
 }
         /* --- OPERAÇÕES: VENDAS & CARRINHO --- */
         function carregarSelectsVenda() {
-            const selectCli = document.getElementById('venda-cliente');
-            const selectProd = document.getElementById('venda-produto');
+    const selectCli = document.getElementById('venda-cliente');
+    const selectProd = document.getElementById('venda-produto');
 
-            selectCli.innerHTML = '<option value="">-- Escolha um cliente --</option>';
-            selectProd.innerHTML = '<option value="">-- Escolha um produto --</option>';
+    selectCli.innerHTML = '<option value="">-- Escolha um cliente --</option>';
+    selectProd.innerHTML = '<option value="">-- Escolha um produto --</option>';
 
-            clientes.forEach(c => selectCli.innerHTML += `<option value="${c.id}">${c.nome} (CPF: ${c.cpf})</option>`);
-            produtos.forEach(p => selectProd.innerHTML += `<option value="${p.id}">${p.nome} - R$ ${p.preco.toFixed(2)}</option>`);
-        }
+    clientes.forEach(c => selectCli.innerHTML += `<option value="${c.id}">${c.nome} (CPF: ${c.cpf})</option>`);
+    produtos.forEach(p => selectProd.innerHTML += `<option value="${p.id}">${p.nome} - R$ ${p.preco.toFixed(2)}</option>`);
 
+    // LINHA NOVA: Limpa o QR Code da venda anterior toda vez que entrar nesta tela
+    document.getElementById("qrcode").innerHTML = ""; 
+}
         function adicionarAoCarrinho() {
             const prodId = document.getElementById('venda-produto').value;
             const qtd = parseInt(document.getElementById('venda-qtd').value);
@@ -724,18 +726,20 @@ function finalizarVenda() {
     vendas.unshift(novaVenda);
     localStorage.setItem('db_bootstrap_vendas', JSON.stringify(vendas));
 
-    alert(`Sucesso!\nVenda registrada para ${clienteObjeto.nome}.\nTotal faturado: R$ ${total.toFixed(2)}\nCliente ganhou +150 pontos fidelidade!`);
-
-    // --- CHAMADA DO QR CODE ---
+    // --- GERA O QR CODE NA TELA ---
     gerarQrCodePix(total); 
 
+    // Mensagem orientando o vendedor
+    alert(`Sucesso!\nVenda registrada no sistema.\n\nMostre a tela para o cliente escanear o QR Code e pagar R$ ${total.toFixed(2)}.`);
+
+    // Limpa o carrinho, MAS CONTINUA NA TELA para o cliente poder ver o código
     carrinho = [];
     renderizarCarrinho();
     document.getElementById('venda-cliente').value = "";
     document.getElementById('venda-produto').value = "";
     document.getElementById('venda-qtd').value = "1";
-
-    navegar('lista-vendas');
+    
+    // A linha "navegar('lista-vendas');" foi removida daqui!
 }
 
         /* --- HISTÓRICO DE VENDAS --- */
