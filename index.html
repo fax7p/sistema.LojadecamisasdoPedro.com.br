@@ -417,16 +417,19 @@
 
         /* --- SPA NAVEGAÇÃO --- */
         function navegar(tela) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => link.classList.remove('active'));
 
-            document.getElementById(`tela-${tela}`).classList.remove('d-none');
-            document.getElementById(`menu-${tela}`).classList.add('active');
+    document.getElementById(`tela-${tela}`).classList.remove('d-none');
+    document.getElementById(`menu-${tela}`).classList.add('active');
 
-            if (tela === 'vendas') { carregarSelectsVenda(); }
-            if (tela === 'lista-vendas') { renderizarHistoricoVendas(); }
-            if (tela === 'fidelidade') { carregarSelectsFidelidade(); renderizarBrindesEResgates(); }
-        }
+    if (tela === 'vendas') { carregarSelectsVenda(); }
+    if (tela === 'lista-vendas') { renderizarHistoricoVendas(); }
+    if (tela === 'fidelidade') { carregarSelectsFidelidade(); renderizarBrindesEResgates(); }
+    
+    // A NOSSA LINHA NOVA AQUI: Atualiza o catálogo com o que vier do parceiro
+    if (tela === 'produtos') { baixarProdutosDaNuvem(); }
+}
 
         /* --- CONTROLE DE CONVERSÃO DE IMAGENS --- */
         function previewImage(event) {
@@ -893,6 +896,45 @@ function sincronizarProdutos() {
 window.addEventListener('online', function() {
     alert("Conexão detectada! Sincronizando...");
     sincronizarProdutos();
+
+    // --- BAIXAR DA NUVEM PARA O CELULAR/PC ---
+function baixarProdutosDaNuvem() {
+    console.log("Procurando produtos novos no Firebase...");
+    
+    firebaseDB.ref('produtos').once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            const produtosNuvem = snapshot.val();
+            
+            // Pega os IDs que já estão na tela (para não duplicar)
+            let idsLocais = produtos.map(p => p.id.toString());
+            let baixouAlgo = false;
+
+            for (let idFirebase in produtosNuvem) {
+                // Se o produto do Firebase NÃO existir no celular, ele salva localmente
+                if (!idsLocais.includes(idFirebase)) {
+                    let p = produtosNuvem[idFirebase];
+                    
+                    db.transaction(tx => {
+                        tx.executeSql('INSERT INTO produtos (id, nome, preco, foto, sincronizado) VALUES (?, ?, ?, ?, 1)', 
+                        [idFirebase, p.nome, p.preco, p.foto]);
+                    });
+                    
+                    baixouAlgo = true;
+                    console.log("Novo produto baixado da nuvem: " + p.nome);
+                }
+            }
+
+            // Se encontrou e baixou coisas novas, atualiza as telas da loja
+            if (baixouAlgo) {
+                setTimeout(() => {
+                    renderizarProdutos();
+                    carregarSelectsVenda(); // Atualiza a aba de Nova Venda
+                }, 500);
+            }
+        }
+    }).catch(erro => console.log("Sem internet para baixar novidades.", erro));
+}
+
 });
 
 /* --- QR CODE --- */
