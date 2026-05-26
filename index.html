@@ -520,10 +520,17 @@
         }
 
         function excluirProduto(id) {
-            if (confirm("Deseja remover este produto do catálogo?")) {
-                produtos = produtos.filter(p => p.id != id);
-                localStorage.setItem('db_bootstrap_produtos', JSON.stringify(produtos));
-                renderizarProdutos();
+            if (confirm("Deseja realmente apagar esta camisa do catálogo?")) {
+                // 1. Apaga do Firebase (Nuvem)
+                firebaseDB.ref('produtos/' + id).remove().then(() => {
+                    // 2. Apaga do Banco Local (SQLite/Navegador)
+                    db.transaction(function(tx) {
+                        tx.executeSql('DELETE FROM produtos WHERE id = ?', [id], function() {
+                            renderizarProdutos(); // Atualiza o catálogo visualmente
+                            carregarSelectsVenda(); // Remove a camisa da tela de Nova Venda
+                        });
+                    });
+                }).catch(erro => alert("Erro ao apagar da nuvem. Verifique a internet."));
             }
         }
 
@@ -553,7 +560,11 @@
                         produtos.push(p); 
                         grid.innerHTML += `
                             <div class="col">
-                                <div class="card h-100 shadow-sm product-card">
+                                <div class="card h-100 shadow-sm product-card position-relative">
+                                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="excluirProduto('${p.id}')" style="z-index: 10;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    
                                     <div class="product-img-container" style="height: 150px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
                                         <img src="${p.foto}" class="img-fluid" style="max-height: 100%;" alt="${p.nome}">
                                     </div>
