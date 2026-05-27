@@ -11,79 +11,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <style>
-        /* Impede a tela inteira de "quicar" e esconde rolagem dupla */
+        /* Ajuste Global para evitar quiques na tela e garantir rolagem isolada */
         body, html { 
             height: 100%; 
             width: 100%;
-            overflow: hidden; 
+            overflow: hidden; /* Bloqueia o scroll da página inteira para forçar o scroll interno */
             margin: 0; 
             padding: 0; 
         }
         .sidebar::-webkit-scrollbar { height: 4px; }
         .sidebar::-webkit-scrollbar-thumb { background: #6c757d; border-radius: 4px; }
 
-        /* 1. Tela de Login Fixa e Centralizada (Sem esticar o fundo) */
-        #tela-login {
+        /* 1. CORREÇÃO DA TELA DE LOGIN (WEB E MOBILE) */
+        #login-screen {
             background-size: cover !important;
             background-position: center center !important;
             background-repeat: no-repeat !important;
             width: 100vw !important;
             height: 100vh !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
         }
 
-        /* 2. O Segredo do Scroll Nativo e Barra Fixa */
+        /* Garante rolagem livre na área principal tanto no PC quanto no celular */
+        main {
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        /* 2. COMPORTAMENTO EXCLUSIVO PARA O CELULAR (APK) */
         @media (max-width: 767px) {
-            /* Desligamos o flex do container principal para o scroll fluir nativamente */
-            #app-container {
-                display: block !important; 
+            
+            /* Adapta o container apenas quando o login for ocultado */
+            #app-container:not(.d-none) {
+                display: flex !important; 
+                flex-direction: column !important;
                 width: 100vw !important;
                 height: 100vh !important;
             }
 
-            /* O 'main' assume a tela toda e ganha barra de rolagem interna DESTRAVADA */
+            /* Tela de conteúdo ganha rolagem solta com espaço extra no fundo */
             main {
                 display: block !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                overflow-y: auto !important; /* A MÁGICA DO SCROLL AQUI */
-                -webkit-overflow-scrolling: touch !important;
+                flex-grow: 1 !important;
+                height: 0 !important; /* Truque do flexbox para forçar rolagem nativa */
                 padding: 15px !important;
-                padding-bottom: 110px !important; /* Espaço para o menu não tapar o último produto */
+                padding-bottom: 100px !important; /* Espaço para o menu não tapar as últimas camisas */
                 margin: 0 !important;
+                width: 100vw !important;
                 box-sizing: border-box !important;
             }
 
-            /* A sidebar vira uma barra 100% sólida travada embaixo */
+            /* Barra de Navegação Inferior Sólida e Fixa */
             .sidebar {
                 position: fixed !important;
                 bottom: 0 !important;
                 left: 0 !important;
                 width: 100vw !important;
-                height: auto !important;
-                background-color: #212529 !important; /* FUNDO ESCURO E SÓLIDO */
+                height: 65px !important;
+                background-color: #212529 !important; /* Fundo sólido para ocultar conteúdo de trás */
                 z-index: 9999 !important;
-                padding: 10px 5px !important;
+                padding: 0 !important;
                 box-shadow: 0 -5px 15px rgba(0,0,0,0.5) !important;
-                overflow-x: auto !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             
+            /* Alinhamento uniforme dos ícones */
             .sidebar ul {
                 display: flex !important;
+                flex-direction: row !important;
                 width: 100% !important;
-                justify-content: space-between !important;
+                justify-content: space-evenly !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
 
-            /* Ajuste para as colunas do catálogo não vazarem a tela */
-            .view-section, #dashboard, .cards, #lista-produtos-render {
+            .sidebar ul li { margin: 0 !important; }
+            .sidebar ul li a { padding: 10px !important; }
+
+            /* Oculta textos e botões não essenciais no mobile para focar nos ícones */
+            .sidebar > a:first-child,
+            .sidebar > button {
+                display: none !important;
+            }
+
+            /* Impede que os cartões estiquem além da tela do celular */
+            .view-section, .card, #lista-produtos-render {
                 width: 100% !important;
+                max-width: 100% !important;
                 box-sizing: border-box !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
+                overflow-x: hidden !important;
             }
         }
     </style>
@@ -166,9 +186,7 @@
 
             <section id="tela-home" class="view-section">
                 <div class="card shadow-sm border-0 p-4 p-md-5 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-                    
                     <img src="img/logo.jpg" alt="Logo Loja do Pedro" class="img-fluid mb-4 shadow-sm" style="max-width: 450px; border-radius: 15px;">
-                    
                     <h2 class="text-dark fs-3 fs-md-2 fw-bold mb-2">Terminal de Vendas</h2>
                     <p class="text-muted fs-5">Caixa livre! Selecione uma opção no menu lateral para iniciar o atendimento.</p>
                 </div>
