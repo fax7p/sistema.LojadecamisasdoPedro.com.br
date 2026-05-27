@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <style>
+   <style>
         /* Ajuste extra para a tela não rolar inteira, só a parte principal */
         body, html { height: 100%; overflow: hidden; }
         .sidebar::-webkit-scrollbar { height: 4px; }
@@ -28,52 +28,54 @@
             align-items: center !important;
         }
 
-        /* 2. Correção Responsiva (Menu Inferior e Conteúdo Cheio) */
+        /* 2. Correção Responsiva (Menu Sólido e Scroll Destravado) */
         @media (max-width: 767px) {
             #app-container {
+                display: flex !important;
                 flex-direction: column !important;
-                width: 100% !important;
                 height: 100vh !important;
+                width: 100vw !important;
+                overflow: hidden !important;
             }
 
-            /* Força a Sidebar a virar Barra Inferior */
+            /* A mágica do Scroll: O Main ocupa o espaço vazio e rola por dentro */
+            main {
+                flex-grow: 1 !important;
+                height: 0 !important; /* Truque essencial para o scroll funcionar no celular */
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important; /* Scroll suave */
+                padding: 15px !important;
+                margin: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Barra inferior SÓLIDA e fixa no rodapé, sem sobrepor o texto */
             .sidebar {
+                flex-shrink: 0 !important; /* Impede a barra de ser esmagada */
                 width: 100% !important;
                 height: auto !important;
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
+                position: relative !important; /* Remove o bug de flutuação */
                 z-index: 9999 !important;
                 padding: 10px 5px !important;
+                background-color: #212529 !important; /* COR ESCURA SÓLIDA PARA ESCONDER O TEXTO DE TRÁS! */
                 box-shadow: 0 -5px 15px rgba(0,0,0,0.3) !important;
                 overflow-x: auto !important;
-                background-color: var(--cor-fundo-lateral) !important;
             }
+            
             .sidebar ul {
+                display: flex !important;
                 width: 100% !important;
                 justify-content: space-between !important;
                 margin: 0 !important;
+                padding: 0 !important;
             }
 
-            /* Garante que `main` use toda a largura */
-            main {
+            #dashboard, .cards, #grafico-vendas, .view-section {
                 width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                height: calc(100vh - 90px) !important; 
-                padding: 15px !important;
-                padding-bottom: 110px !important; 
-                overflow-y: auto !important;
                 box-sizing: border-box !important;
             }
-
-            /* Força todos os elementos internos do dashboard a serem flexíveis e full-width */
-            #dashboard, .cards, #grafico-vendas {
-                width: 100% !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-            }
-        } /* <--- O ERRO ESTAVA AQUI! Essa chave fechando o @media estava faltando */
+        }
     </style>
 </head>
 
