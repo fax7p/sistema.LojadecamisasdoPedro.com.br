@@ -4,106 +4,133 @@
 <head>
     <meta charset="UTF-8">
     <title>Sistema da Loja</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob: file: gap:; style-src * 'unsafe-inline'; media-src *; img-src * data: content:;">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <link rel="stylesheet" href="app.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <style>
-        /* Ajuste Global para evitar quiques na tela e garantir rolagem isolada */
-        body, html { 
-            height: 100%; 
-            width: 100%;
-            overflow: hidden; /* Bloqueia o scroll da página inteira para forçar o scroll interno */
-            margin: 0; 
-            padding: 0; 
+        /* CSS Reset e Configurações Globais */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; 
+            background-color: #f8f9fa;
         }
-        .sidebar::-webkit-scrollbar { height: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #6c757d; border-radius: 4px; }
 
-        /* 1. CORREÇÃO DA TELA DE LOGIN (WEB E MOBILE) */
+        /* Estilos View Login */
         #login-screen {
-            background-size: cover !important;
-            background-position: center center !important;
-            background-repeat: no-repeat !important;
-            width: 100vw !important;
-            height: 100vh !important;
+            background-color: #333;
+            background-image: url('img/fundo_login.jpeg');
+            background-size: cover;
+            background-position: center;
         }
 
-        /* Garante rolagem livre na área principal tanto no PC quanto no celular */
-        main {
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch !important;
+        /* Estrutura Principal (Flexbox) */
+        #meu-app-container {
+            display: flex;
+            flex-direction: column-reverse; 
+            width: 100vw;
+            height: 100vh;
         }
 
-        /* 2. COMPORTAMENTO EXCLUSIVO PARA O CELULAR (APK) */
-        @media (max-width: 767px) {
+        .meu-conteudo-layout {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+
+        /* Sidebar - Default (Mobile) */
+        .meu-menu-layout {
+            height: 65px;
+            background-color: #212529;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            flex-shrink: 0;
+            border-top: 1px solid #000;
+        }
+
+        .meu-menu-layout a {
+            color: #adb5bd;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .meu-menu-layout a.active {
+            color: #0d6efd;
+        }
+
+        .meu-menu-layout span, 
+        .meu-menu-layout .logo-desktop, 
+        .meu-menu-layout button {
+            display: none;
+        }
+
+        /* Media Queries - Desktop */
+        @media (min-width: 768px) {
+            #meu-app-container {
+                flex-direction: row;
+            }
             
-            /* Adapta o container apenas quando o login for ocultado */
-            #app-container:not(.d-none) {
-                display: flex !important; 
-                flex-direction: column !important;
-                width: 100vw !important;
-                height: 100vh !important;
+            .meu-menu-layout {
+                width: 250px;
+                height: 100vh;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                padding: 20px 15px;
+                border-top: none;
+                border-right: 1px solid #000;
             }
 
-            /* Tela de conteúdo ganha rolagem solta com espaço extra no fundo */
-            main {
-                display: block !important;
-                flex-grow: 1 !important;
-                height: 0 !important; /* Truque do flexbox para forçar rolagem nativa */
-                padding: 15px !important;
-                padding-bottom: 100px !important; /* Espaço para o menu não tapar as últimas camisas */
-                margin: 0 !important;
-                width: 100vw !important;
-                box-sizing: border-box !important;
+            .meu-menu-layout a {
+                font-size: 1.1rem;
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 12px;
+                border-radius: 5px;
             }
 
-            /* Barra de Navegação Inferior Sólida e Fixa */
-            .sidebar {
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 65px !important;
-                background-color: #212529 !important; /* Fundo sólido para ocultar conteúdo de trás */
-                z-index: 9999 !important;
-                padding: 0 !important;
-                box-shadow: 0 -5px 15px rgba(0,0,0,0.5) !important;
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            
-            /* Alinhamento uniforme dos ícones */
-            .sidebar ul {
-                display: flex !important;
-                flex-direction: row !important;
-                width: 100% !important;
-                justify-content: space-evenly !important;
-                margin: 0 !important;
-                padding: 0 !important;
+            .meu-menu-layout a:hover {
+                background-color: rgba(255,255,255,0.1);
             }
 
-            .sidebar ul li { margin: 0 !important; }
-            .sidebar ul li a { padding: 10px !important; }
-
-            /* Oculta textos e botões não essenciais no mobile para focar nos ícones */
-            .sidebar > a:first-child,
-            .sidebar > button {
-                display: none !important;
+            .meu-menu-layout a i {
+                margin-right: 15px;
             }
 
-            /* Impede que os cartões estiquem além da tela do celular */
-            .view-section, .card, #lista-produtos-render {
-                width: 100% !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                overflow-x: hidden !important;
+            .meu-menu-layout span, 
+            .meu-menu-layout .logo-desktop, 
+            .meu-menu-layout button {
+                display: inline-block;
+            }
+
+            .meu-menu-layout .logo-desktop {
+                color: white;
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin-bottom: 30px;
+                width: 100%;
+                text-align: left;
+            }
+
+            .meu-menu-layout button {
+                margin-top: auto;
+                width: 100%;
             }
         }
     </style>
@@ -111,10 +138,8 @@
 
 <body>
 
-    <div id="login-screen"
-        class="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
-        style="z-index: 1060; background-image: url('img/fundo_login.jpeg'); background-size: cover; background-position: center; background-attachment: fixed;">
-        <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5);"></div>
+    <div id="login-screen" class="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100" style="z-index: 1060;">
+        <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6);"></div>
         <div class="card shadow" style="width: 100%; max-width: 400px; position: relative; z-index: 1;">
             <div class="card-body p-4 p-md-5">
                 <h3 class="card-title text-center mb-4 text-primary fw-bold">Loja de Camisas do Pedro</h3>
@@ -136,59 +161,15 @@
         </div>
     </div>
 
-    <div id="app-container" class="d-flex flex-column flex-md-row w-100 h-100 d-none">
+    <div id="meu-app-container" class="d-none">
 
-        <div class="sidebar bg-dark d-flex flex-row flex-md-column flex-shrink-0 p-2 p-md-3 text-white align-items-center align-items-md-start" style="overflow-x: auto; white-space: nowrap;">
-            <a href="#" class="d-flex align-items-center mb-0 mb-md-3 me-4 me-md-0 text-white text-decoration-none">
-                <i class="bi bi-box-seam fs-4 me-2 text-primary"></i>
-                <span class="fs-5 fw-semibold d-none d-md-inline">Sistema da Loja</span>
-            </a>
+        <div class="meu-conteudo-layout">
             
-            <ul class="nav nav-pills flex-row flex-md-column mb-0 mb-md-auto gap-2 d-flex flex-nowrap">
-                <li class="nav-item">
-                    <a href="#" id="menu-home" class="nav-link active px-2 px-md-3" onclick="navegar('home')">
-                        <i class="bi bi-house-door me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Início</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="menu-clientes" class="nav-link px-2 px-md-3" onclick="navegar('clientes')">
-                        <i class="bi bi-people me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Clientes</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="menu-produtos" class="nav-link px-2 px-md-3" onclick="navegar('produtos')">
-                        <i class="bi bi-grid me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Catálogo</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="menu-vendas" class="nav-link px-2 px-md-3" onclick="navegar('vendas')">
-                        <i class="bi bi-cart-plus me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Nova Venda</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="menu-lista-vendas" class="nav-link px-2 px-md-3" onclick="navegar('lista-vendas')">
-                        <i class="bi bi-receipt me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Histórico</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="menu-fidelidade" class="nav-link px-2 px-md-3" onclick="navegar('fidelidade')">
-                        <i class="bi bi-gift me-md-2 fs-5 fs-md-6"></i> <span class="d-none d-md-inline">Prêmios</span>
-                    </a>
-                </li>
-            </ul>
-            
-            <button class="btn btn-danger mt-0 mt-md-4 ms-3 ms-md-0" onclick="efetuarLogout()">
-                <i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline ms-1">Sair</span>
-            </button>
-        </div>
-
-        <main class="flex-grow-1 p-3 p-md-4 bg-light">
-
             <section id="tela-home" class="view-section">
                 <div class="card shadow-sm border-0 p-4 p-md-5 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-                    <img src="img/logo.jpg" alt="Logo Loja do Pedro" class="img-fluid mb-4 shadow-sm" style="max-width: 450px; border-radius: 15px;">
+                    <img src="img/logo.jpg" alt="Logo" class="img-fluid mb-4 shadow-sm" style="max-width: 450px; border-radius: 15px;">
                     <h2 class="text-dark fs-3 fs-md-2 fw-bold mb-2">Terminal de Vendas</h2>
-                    <p class="text-muted fs-5">Caixa livre! Selecione uma opção no menu lateral para iniciar o atendimento.</p>
+                    <p class="text-muted fs-5">Caixa livre! Selecione uma opção no menu.</p>
                 </div>
             </section>
 
@@ -337,11 +318,11 @@
                 <div class="card shadow-sm border-0 p-3 p-md-4">
                     <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Histórico de Vendas</h2>
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle" style="min-width: 600px;">
+                        <table class="table table-striped table-hover align-middle" style="min-width: 350px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Data</th>
+                                    <th class="d-none d-md-table-cell">ID</th>
+                                    <th class="d-none d-md-table-cell">Data</th>
                                     <th>Cliente</th>
                                     <th>Produtos</th>
                                     <th class="text-end">Total</th>
@@ -423,8 +404,35 @@
                     </div>
                 </div>
             </section>
+        </div>
 
-        </main>
+        <div class="meu-menu-layout">
+            <div class="logo-desktop"><i class="bi bi-box-seam text-primary me-2"></i>Sistema</div>
+            
+            <a href="#" id="menu-home" class="active" onclick="navegar('home')" title="Início">
+                <i class="bi bi-house-door"></i><span>Início</span>
+            </a>
+            <a href="#" id="menu-clientes" onclick="navegar('clientes')" title="Clientes">
+                <i class="bi bi-people"></i><span>Clientes</span>
+            </a>
+            <a href="#" id="menu-produtos" onclick="navegar('produtos')" title="Catálogo">
+                <i class="bi bi-grid"></i><span>Catálogo</span>
+            </a>
+            <a href="#" id="menu-vendas" onclick="navegar('vendas')" title="Venda">
+                <i class="bi bi-cart-plus"></i><span>Nova Venda</span>
+            </a>
+            <a href="#" id="menu-lista-vendas" onclick="navegar('lista-vendas')" title="Histórico">
+                <i class="bi bi-receipt"></i><span>Histórico</span>
+            </a>
+            <a href="#" id="menu-fidelidade" onclick="navegar('fidelidade')" title="Prêmios">
+                <i class="bi bi-gift"></i><span>Prêmios</span>
+            </a>
+            
+            <button class="btn btn-danger" onclick="efetuarLogout()">
+                <i class="bi bi-box-arrow-right"></i> <span class="ms-1">Sair</span>
+            </button>
+        </div>
+
     </div>
 
     <script src="cordova.js"></script>
@@ -434,6 +442,7 @@
     <script src="js/database.js"></script>
 
     <script>
+        // Inicialização de variáveis locais
         let clientes = JSON.parse(localStorage.getItem('db_bootstrap_clientes')) || [];
         let produtos = JSON.parse(localStorage.getItem('db_bootstrap_produtos')) || [];
         let vendas = JSON.parse(localStorage.getItem('db_bootstrap_vendas')) || [];
@@ -442,7 +451,12 @@
         let carrinho = [];
         let fotoBase64Tmp = "";
 
-        window.onload = function () {
+        let appInicializado = false;
+
+        function inicializarSistema() {
+            if (appInicializado) return;
+            appInicializado = true;
+
             clientes = clientes.map(c => ({ ...c, pontos: c.pontos || 0 }));
             localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
 
@@ -455,8 +469,12 @@
                     renderizarProdutos();
                 }
             }, 500);
-        };
+        }
 
+        document.addEventListener('deviceready', inicializarSistema, false);
+        window.addEventListener('load', inicializarSistema, false);
+
+        // Controladores de Sessão
         function efetuarLogin(event) {
             event.preventDefault();
             const user = document.getElementById('username').value;
@@ -466,22 +484,23 @@
             if (user === 'admin' && pass === '1234') {
                 erroMsg.classList.add('d-none');
                 document.getElementById('login-screen').classList.add('d-none');
-                document.getElementById('app-container').classList.remove('d-none');
+                document.getElementById('meu-app-container').classList.remove('d-none');
             } else {
                 erroMsg.classList.remove('d-none');
             }
         }
 
         function efetuarLogout() {
-            document.getElementById('app-container').classList.add('d-none');
+            document.getElementById('meu-app-container').classList.add('d-none');
             document.getElementById('login-screen').classList.remove('d-none');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
 
+        // Navegação de Telas
         function navegar(tela) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.meu-menu-layout a').forEach(link => link.classList.remove('active'));
             document.getElementById(`tela-${tela}`).classList.remove('d-none');
             document.getElementById(`menu-${tela}`).classList.add('active');
 
@@ -491,6 +510,7 @@
             if (tela === 'produtos') { baixarProdutosDaNuvem(); }
         }
 
+        // Processamento de Imagens
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function () {
@@ -504,6 +524,7 @@
             }
         }
 
+        // Módulo: Clientes
         function salvarCliente(event) {
             event.preventDefault();
             const id = document.getElementById('edit-cli-id').value;
@@ -572,6 +593,7 @@
             });
         }
 
+        // Módulo: Produtos
         function salvarProduto(event) {
             event.preventDefault();
             const id = Date.now();
@@ -685,6 +707,7 @@
             });
         }
 
+        // Módulo: Vendas e PDV
         function carregarSelectsVenda() {
             const selectCli = document.getElementById('venda-cliente');
             const selectProd = document.getElementById('venda-produto');
@@ -704,8 +727,13 @@
             }
             const produtoInfo = produtos.find(p => p.id == prodId);
             const itemExistente = carrinho.find(item => item.produto.id == prodId);
-            if (itemExistente) { itemExistente.qtd += qtd; } 
-            else { carrinho.push({ produto: produtoInfo, qtd: qtd }); }
+            
+            if (itemExistente) { 
+                itemExistente.qtd += qtd; 
+            } else { 
+                carrinho.push({ produto: produtoInfo, qtd: qtd }); 
+            }
+            
             renderizarCarrinho();
         }
 
@@ -718,6 +746,7 @@
             const cuerpo = document.getElementById('carrinho-corpo');
             cuerpo.innerHTML = '';
             let totalGeral = 0;
+            
             carrinho.forEach((item, index) => {
                 const subtotal = item.produto.preco * item.qtd;
                 totalGeral += subtotal;
@@ -731,13 +760,21 @@
                         </td>
                     </tr>`;
             });
+            
             document.getElementById('venda-total-geral').innerText = totalGeral.toFixed(2);
         }
 
         function finalizarVenda() {
             const clienteId = document.getElementById('venda-cliente').value;
-            if (!clienteId) { alert('Selecione o comprador (cliente) antes de fechar.'); return; }
-            if (carrinho.length === 0) { alert('O carrinho de compras está vazio.'); return; }
+            
+            if (!clienteId) { 
+                alert('Selecione o comprador (cliente) antes de fechar.'); 
+                return; 
+            }
+            if (carrinho.length === 0) { 
+                alert('O carrinho de compras está vazio.'); 
+                return; 
+            }
 
             clientes = clientes.map(c => {
                 if (c.id == clienteId) return { ...c, pontos: (c.pontos || 0) + 150 };
@@ -766,6 +803,7 @@
 
             carrinho = [];
             renderizarCarrinho();
+            
             document.getElementById('venda-cliente').value = "";
             document.getElementById('venda-produto').value = "";
             document.getElementById('venda-qtd').value = "1";
@@ -774,39 +812,47 @@
         function renderizarHistoricoVendas() {
             const tbody = document.getElementById('lista-vendas-render');
             tbody.innerHTML = '';
+            
             if (vendas.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhuma venda registrada.</td></tr>`;
                 return;
             }
+            
             vendas.forEach(v => {
                 tbody.innerHTML += `
                     <tr>
-                        <td class="font-monospace text-primary fw-bold small">${v.id}</td>
+                        <td class="font-monospace text-primary fw-bold small d-none d-md-table-cell">${v.id}</td>
                         <td class="small text-secondary d-none d-md-table-cell">${v.data}</td>
                         <td class="fw-semibold">${v.cliente}</td>
-                        <td class="small text-truncate d-none d-md-table-cell" style="max-width: 200px;" title="${v.itens}">${v.itens}</td>
+                        <td class="small" style="max-width: 150px; white-space: normal; word-wrap: break-word;">${v.itens}</td>
                         <td class="text-end fw-bold text-success text-nowrap">R$ ${v.total.toFixed(2)}</td>
                     </tr>`;
             });
         }
 
+        // Módulo: Fidelidade e Resgates
         function carregarSelectsFidelidade() {
             const selectCli = document.getElementById('resgate-cliente');
             const selectBrinde = document.getElementById('resgate-brinde');
+            
             selectCli.innerHTML = '<option value="">-- Escolha um cliente --</option>';
             selectBrinde.innerHTML = '<option value="">-- Escolha um brinde --</option>';
+            
             clientes.forEach(c => selectCli.innerHTML += `<option value="${c.id}">${c.nome} (Saldo: ${c.pontos || 0} pts)</option>`);
             brindes.forEach(b => selectBrinde.innerHTML += `<option value="${b.id}">${b.nome} - Custo: ${b.custo} pts</option>`);
+            
             atualizarPontosVisiveis();
         }
 
         function atualizarPontosVisiveis() {
             const clienteId = document.getElementById('resgate-cliente').value;
             const containerSaldo = document.getElementById('resgate-saldo-pontos');
+            
             if (!clienteId) {
                 containerSaldo.innerText = "0 pts";
                 return;
             }
+            
             const cliente = clientes.find(c => c.id == clienteId);
             containerSaldo.innerText = `${cliente.pontos || 0} pts`;
         }
@@ -815,17 +861,24 @@
             event.preventDefault();
             const nome = document.getElementById('brinde-nome').value;
             const custo = parseInt(document.getElementById('brinde-custo').value);
+            
             brindes.push({ id: Date.now(), nome, custo });
             localStorage.setItem('db_bootstrap_brindes', JSON.stringify(brindes));
+            
             document.getElementById('form-brinde').reset();
             carregarSelectsFidelidade();
+            
             alert("Brinde cadastrado com sucesso!");
         }
 
         function comprarBrinde() {
             const clienteId = document.getElementById('resgate-cliente').value;
             const brindeId = document.getElementById('resgate-brinde').value;
-            if (!clienteId || !brindeId) { alert("Selecione o cliente e o brinde."); return; }
+            
+            if (!clienteId || !brindeId) { 
+                alert("Selecione o cliente e o brinde."); 
+                return; 
+            }
 
             const cliente = clientes.find(c => c.id == clienteId);
             const brinde = brindes.find(b => b.id == brindeId);
@@ -839,6 +892,7 @@
                 if (c.id == clienteId) return { ...c, pontos: c.pontos - brinde.custo };
                 return c;
             });
+            
             localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
             renderizarClientes();
 
@@ -856,10 +910,12 @@
         function renderBrindesComprados() {
             const tbody = document.getElementById('lista-resgates-render');
             tbody.innerHTML = '';
+            
             if (resgates.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Nenhum brinde resgatado.</td></tr>`;
                 return;
             }
+            
             resgates.forEach(r => {
                 tbody.innerHTML += `
                     <tr>
@@ -871,10 +927,12 @@
             });
         }
 
-        function renderizarBrindesEResgates() { renderBrindesComprados(); }
+        function renderizarBrindesEResgates() { 
+            renderBrindesComprados(); 
+        }
 
+        // Sincronização Local e Firebase
         function sincronizarProdutos() {
-            console.log("Verificando pendências offline...");
             db.transaction(function(tx) {
                 tx.executeSql('SELECT * FROM produtos WHERE sincronizado = 0', [], function(tx, rs) {
                     for (let i = 0; i < rs.rows.length; i++) {
@@ -892,17 +950,16 @@
         }
 
         window.addEventListener('online', function() {
-            alert("Conexão detectada! Sincronizando...");
             sincronizarProdutos();
         });
 
         function baixarProdutosDaNuvem() {
-            console.log("Procurando produtos novos no Firebase...");
             firebaseDB.ref('produtos').once('value').then(snapshot => {
                 if (snapshot.exists()) {
                     const produtosNuvem = snapshot.val();
                     let idsLocais = produtos.map(p => p.id.toString());
                     let baixouAlgo = false;
+                    
                     for (let idFirebase in produtosNuvem) {
                         if (!idsLocais.includes(idFirebase)) {
                             let p = produtosNuvem[idFirebase];
@@ -913,6 +970,7 @@
                             baixouAlgo = true;
                         }
                     }
+                    
                     if (baixouAlgo) {
                         setTimeout(() => {
                             renderizarProdutos();
@@ -923,6 +981,7 @@
             }).catch(erro => console.log("Sem internet para baixar novidades.", erro));
         }
 
+        // Integração de Pagamento
         function gerarQrCodePix(valor) {
             const container = document.getElementById("qrcode");
             container.innerHTML = ""; 
@@ -930,24 +989,6 @@
             new QRCode(container, { text: payloadPix, width: 128, height: 128 });
         }
 
-        function redimensionarImagem(file, callback) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    callback(canvas.toDataURL('image/jpeg', 0.7)); 
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
     </script>
 </body>
 </html>
