@@ -11,11 +11,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <link rel="stylesheet" href="app.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <style>
-        /* Ajustes visuais básicos para a tela ocupar 100% e não bugar no celular */
+        /* ===================================================================================== */
+        /* CSS RESET E CONFIGURAÇÕES GLOBAIS DA TELA                                             */
+        /* Deixa a tela ocupando 100% do espaço sem barras de rolagem duplas                     */
+        /* ===================================================================================== */
+        
         html, body {
             margin: 0;
             padding: 0;
@@ -25,7 +31,7 @@
             background-color: #f8f9fa;
         }
 
-        /* Deixa a tela de login bonitona com a imagem de fundo */
+        /* O background escuro e a imagem de fundo da sua tela de login */
         #login-screen {
             background-color: #333;
             background-image: url('img/fundo_login.jpeg');
@@ -33,7 +39,7 @@
             background-position: center;
         }
 
-        /* Estrutura principal do app (menu + conteúdo) */
+        /* O contêiner principal que segura o Menu e o Conteúdo das páginas */
         #meu-app-container {
             display: flex;
             flex-direction: column-reverse; 
@@ -41,7 +47,7 @@
             height: 100vh;
         }
 
-        /* Área onde as telas aparecem e rolam para baixo */
+        /* Área onde o conteúdo rola pra baixo (as tabelas, os cards, etc) */
         .meu-conteudo-layout {
             flex: 1;
             overflow-y: auto;
@@ -50,7 +56,10 @@
             background-color: #f8f9fa;
         }
 
-        /* O famoso menu inferior no celular */
+        /* ===================================================================================== */
+        /* DESIGN DO MENU (Versão Mobile - Fica no rodapé)                                       */
+        /* ===================================================================================== */
+        
         .meu-menu-layout {
             height: 65px;
             background-color: #212529;
@@ -71,29 +80,25 @@
             align-items: center;
         }
 
-        /* Cor azulzinha de quando o menu tá selecionado */
+        /* A cor azul de quando o botão tá selecionado */
         .meu-menu-layout a.active {
             color: #0d6efd;
         }
 
-        /* Escondemos texto no celular para caber os ícones certinho */
+        /* No celular, a gente esconde os textos do menu pra caber tudo numa linha só */
         .meu-menu-layout span, 
         .meu-menu-layout .logo-desktop, 
         .meu-menu-layout button {
             display: none;
         }
 
-        /* Aquele selo que mostra se tem internet ou não, fixo lá no topo */
-        .sync-badge { 
-            position: fixed; 
-            top: 15px; 
-            right: 15px; 
-            z-index: 1050; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-        }
-
-        /* Regras para telas grandes (caso a gente abra em um tablet ou algo maior depois) */
+        /* ===================================================================================== */
+        /* MEDIA QUERIES: MODO PC / DESKTOP                                                      */
+        /* Se a tela for larga (Notebook), o menu vai pra esquerda e os textos aparecem          */
+        /* ===================================================================================== */
+        
         @media (min-width: 768px) {
+            
             #meu-app-container {
                 flex-direction: row;
             }
@@ -125,6 +130,7 @@
                 margin-right: 15px;
             }
 
+            /* Revela os textos e o botão de Sair no PC */
             .meu-menu-layout span, 
             .meu-menu-layout .logo-desktop, 
             .meu-menu-layout button {
@@ -151,13 +157,18 @@
 <body>
 
     <div id="login-screen" class="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100" style="z-index: 1060;">
+        
         <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6);"></div>
+        
         <div class="card shadow" style="width: 100%; max-width: 400px; position: relative; z-index: 1;">
             <div class="card-body p-4 p-md-5">
+                
                 <h3 class="card-title text-center mb-4 text-primary fw-bold">Loja de Camisas do Pedro</h3>
+                
                 <div id="login-error" class="alert alert-danger d-none text-center" role="alert">
-                    Poxa, o usuário ou a senha estão incorretos! Tenta de novo.
+                    Usuário ou senha incorretos!
                 </div>
+                
                 <form id="form-login" onsubmit="efetuarLogin(event)">
                     <div class="mb-3">
                         <label for="username" class="form-label">Usuário</label>
@@ -167,7 +178,7 @@
                         <label for="password" class="form-label">Senha</label>
                         <input type="password" id="password" class="form-control" required placeholder="Sua senha">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar no Caixa</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
                 </form>
             </div>
         </div>
@@ -175,57 +186,61 @@
 
     <div id="meu-app-container" class="d-none">
 
-        <div id="status-conexao" class="sync-badge badge bg-secondary px-3 py-2 fs-6 rounded-pill d-none">
-            <i class="bi bi-wifi-off me-1"></i> Sem Internet
-        </div>
-
         <div class="meu-conteudo-layout">
             
             <section id="tela-home" class="view-section">
                 <div class="card shadow-sm border-0 p-4 p-md-5 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
+                    
                     <img src="img/logo.jpg" alt="Logo" class="img-fluid mb-4 shadow-sm" style="max-width: 450px; border-radius: 15px;">
                     <h2 class="text-dark fs-3 fs-md-2 fw-bold mb-2">Terminal de Vendas</h2>
-                    <p class="text-muted fs-5">Caixa livre! Arquitetura Offline-First Ativa.</p>
+                    
+                    <p class="text-muted fs-5" id="ambiente-texto">Caixa livre! Selecione uma opção no menu.</p>
                 </div>
             </section>
 
             <section id="tela-clientes" class="view-section d-none">
+                
                 <div class="card shadow-sm border-0 p-3 p-md-4 mb-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="cliente-form-title">Cadastrar um Novo Cliente</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="cliente-form-title">Cadastrar Novo Cliente</h2>
+                    
                     <form id="form-cliente" onsubmit="salvarCliente(event)">
                         <input type="hidden" id="edit-cli-id">
+                        
                         <div class="row g-3">
                             <div class="col-12 col-md-5">
                                 <label for="cli-nome" class="form-label">Nome Completo</label>
                                 <input type="text" id="cli-nome" class="form-control" required>
                             </div>
+                            
                             <div class="col-12 col-md-4">
                                 <label for="cli-email" class="form-label">E-mail</label>
                                 <input type="email" id="cli-email" class="form-control" required>
                             </div>
+                            
                             <div class="col-12 col-md-3">
                                 <label for="cli-cpf" class="form-label">CPF</label>
                                 <input type="text" id="cli-cpf" class="form-control" placeholder="000.000.000-00" required>
                             </div>
+                            
                             <div class="col-12 text-end mt-4">
                                 <button type="button" id="btn-cancelar-cli" class="btn btn-secondary d-none me-2" onclick="resetarFormCliente()">Cancelar</button>
-                                <button type="submit" id="btn-salvar-cli" class="btn btn-primary w-100 w-md-auto">Salvar Cadastro</button>
+                                <button type="submit" id="btn-salvar-cli" class="btn btn-primary w-100 w-md-auto">Salvar Cliente</button>
                             </div>
                         </div>
                     </form>
                 </div>
 
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h3 class="h5 mb-3">Base de Clientes</h3>
+                    <h3 class="h5 mb-3">Clientes Cadastrados</h3>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>Nome</th>
-                                    <th>E-mail</th>
+                                    <th class="d-none d-md-table-cell">E-mail</th>
                                     <th>CPF</th>
                                     <th>Pontos</th>
-                                    <th class="text-end">O que fazer?</th>
+                                    <th class="text-end">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-clientes-render">
@@ -236,95 +251,115 @@
             </section>
 
             <section id="tela-produtos" class="view-section d-none">
+                
                 <div class="card shadow-sm border-0 p-3 p-md-4 mb-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="produto-form-title">Adicionar Camisa ao Catálogo</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="produto-form-title">Cadastrar Novo Produto</h2>
+                    
                     <form id="form-produto" onsubmit="salvarProduto(event)">
+                        
                         <input type="hidden" id="edit-prod-id">
+                        
                         <div class="row g-3">
                             <div class="col-12 col-md-5">
-                                <label for="prod-nome" class="form-label">Modelo da Camisa</label>
+                                <label for="prod-nome" class="form-label">Nome do Produto</label>
                                 <input type="text" id="prod-nome" class="form-control" required>
                             </div>
+                            
                             <div class="col-12 col-md-3">
                                 <label for="prod-preco" class="form-label">Preço (R$)</label>
                                 <input type="number" step="0.01" id="prod-preco" class="form-control" required>
                             </div>
+                            
                             <div class="col-12 col-md-4">
-                                <label for="prod-foto" class="form-label">Foto dela</label>
+                                <label for="prod-foto" class="form-label">Foto do Produto</label>
                                 <input type="file" id="prod-foto" class="form-control" accept="image/*" onchange="previewImage(event)">
                             </div>
+                            
                             <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
                                 <div class="mb-3 mb-md-0">
-                                    <img id="img-preview" src="" style="max-height: 80px; display: none;" class="img-thumbnail" alt="Preview">
+                                    <img id="img-preview" src="" style="max-height: 80px; display: none;" class="img-thumbnail" alt="Preview da Imagem">
                                 </div>
                                 <div class="w-100 w-md-auto text-end">
                                     <button type="button" id="btn-cancelar-prod" class="btn btn-secondary d-none me-2" onclick="resetarFormProduto()">Cancelar</button>
-                                    <button type="submit" id="btn-salvar-prod" class="btn btn-primary w-100 w-md-auto">Colocar à Venda</button>
+                                    <button type="submit" id="btn-salvar-prod" class="btn btn-primary w-100 w-md-auto">Salvar Produto</button>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
 
-                <h3 class="h5 mb-3 text-dark">Nossas Camisas</h3>
+                <h3 class="h5 mb-3 text-dark">Catálogo de Produtos</h3>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 g-md-4" id="lista-produtos-render">
                     </div>
             </section>
 
             <section id="tela-vendas" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h2 class="h5 border-bottom pb-2 mb-4 text-dark">Registrar Nova Venda <small class="text-muted fs-6 d-block d-md-inline">(Rende 150 pts de brinde)</small></h2>
+                    
+                    <h2 class="h5 border-bottom pb-2 mb-4 text-dark">
+                        Registrar Nova Venda 
+                        <small class="text-muted fs-6 d-block d-md-inline">(Ganha +150 pts)</small>
+                    </h2>
+                    
                     <div class="row g-4">
                         
                         <div class="col-12 col-lg-5">
+                            
                             <div class="mb-3">
-                                <label for="venda-cliente" class="form-label fw-semibold">1. Quem está comprando?</label>
+                                <label for="venda-cliente" class="form-label fw-semibold">1. Selecione o Cliente</label>
                                 <select id="venda-cliente" class="form-select" required>
-                                    <option value="">-- Escolhe o sortudo --</option>
+                                    <option value="">-- Escolha --</option>
                                 </select>
                             </div>
 
                             <div class="card bg-light border p-3 mt-4">
-                                <h5 class="h6 mb-3 text-secondary">2. Carrinho de Compras</h5>
+                                <h5 class="h6 mb-3 text-secondary">2. Adicionar ao Carrinho</h5>
+                                
                                 <div class="mb-3">
-                                    <label for="venda-produto" class="form-label">O que ele quer?</label>
+                                    <label for="venda-produto" class="form-label">Produto</label>
                                     <select id="venda-produto" class="form-select">
-                                        <option value="">-- Escolhe a camisa --</option>
+                                        <option value="">-- Escolha --</option>
                                     </select>
                                 </div>
+                                
                                 <div class="mb-3">
-                                    <label for="venda-qtd" class="form-label">Quantas?</label>
+                                    <label for="venda-qtd" class="form-label">Qtd</label>
                                     <input type="number" id="venda-qtd" class="form-control" value="1" min="1">
                                 </div>
+                                
                                 <button type="button" class="btn btn-secondary w-100" onclick="adicionarAoCarrinho()">
-                                    <i class="bi bi-plus-circle me-1"></i> Jogar no Carrinho
+                                    <i class="bi bi-plus-circle me-1"></i> Adicionar
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-7">
-                            <h5 class="h6 fw-semibold mb-3 mt-4 mt-lg-0">A conta até agora</h5>
+                            <h5 class="h6 fw-semibold mb-3 mt-4 mt-lg-0">Resumo da Venda</h5>
+                            
                             <div class="table-responsive bg-white border rounded mb-3" style="min-height: 150px;">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Item</th>
+                                            <th>Produto</th>
                                             <th width="60">Qtd</th>
                                             <th>Preço</th>
                                             <th width="50"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="carrinho-corpo">
-                                    </tbody>
+                                        </tbody>
                                 </table>
                             </div>
+                            
                             <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded">
-                                <span class="fw-bold fs-6 fs-md-5 text-dark">Totalzão:</span>
+                                <span class="fw-bold fs-6 fs-md-5 text-dark">Total:</span>
                                 <span class="fw-bold fs-5 fs-md-4 text-success">R$ <span id="venda-total-geral">0.00</span></span>
                             </div>
+                            
                             <button type="button" class="btn btn-success w-100 mt-3 py-3 fs-5 fw-bold shadow-sm" onclick="finalizarVenda()">
-                                <i class="bi bi-check2-circle me-2"></i> Bater o Martelo (Vender)
+                                <i class="bi bi-check2-circle me-2"></i> Concluir Venda
                             </button>
+                            
                             <div id="qrcode" class="d-flex justify-content-center mt-4"></div>
                         </div>
                     </div>
@@ -333,16 +368,17 @@
 
             <section id="tela-lista-vendas" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Histórico das Vendas Realizadas</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Histórico de Vendas</h2>
+                    
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle" style="min-width: 350px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th class="d-none d-md-table-cell">Código da Venda</th>
-                                    <th class="d-none d-md-table-cell">Quando foi?</th>
-                                    <th>Comprador</th>
-                                    <th>Itens levados</th>
-                                    <th class="text-end">Valor R$</th>
+                                    <th class="d-none d-md-table-cell">ID</th>
+                                    <th class="d-none d-md-table-cell">Data</th>
+                                    <th>Cliente</th>
+                                    <th>Produtos</th>
+                                    <th class="text-end">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-vendas-render">
@@ -354,48 +390,56 @@
 
             <section id="tela-fidelidade" class="view-section d-none">
                 <div class="row g-4 mb-4">
+                    
                     <div class="col-12 col-md-5">
                         <div class="card shadow-sm border-0 p-3 p-md-4 h-100">
-                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Criar uma Nova Recompensa</h2>
+                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Novo Brinde</h2>
+                            
                             <form id="form-brinde" onsubmit="salvarBrinde(event)">
                                 <div class="mb-3">
-                                    <label class="form-label">O que é o brinde?</label>
-                                    <input type="text" id="brinde-nome" class="form-control" required placeholder="Ex: Chaveiro da Sorte">
+                                    <label class="form-label">Nome do Brinde</label>
+                                    <input type="text" id="brinde-nome" class="form-control" required placeholder="Ex: Caneca">
                                 </div>
+                                
                                 <div class="mb-3">
-                                    <label class="form-label">Custa quantos pontos?</label>
+                                    <label class="form-label">Custo (Pontos)</label>
                                     <input type="number" id="brinde-custo" class="form-control" min="1" required placeholder="Ex: 300">
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Registrar Recompensa</button>
+                                
+                                <button type="submit" class="btn btn-primary w-100">Salvar Brinde</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="col-12 col-md-7">
                         <div class="card shadow-sm border-0 p-3 p-md-4 h-100">
-                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Hora do Cliente Resgatar</h2>
+                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Efetuar Resgate</h2>
+                            
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">1. Quem quer trocar pontos?</label>
+                                    <label class="form-label fw-semibold">1. Cliente</label>
                                     <select id="resgate-cliente" class="form-select" onchange="atualizarPontosVisiveis()" required>
-                                        <option value="">-- Puxa o cliente aqui --</option>
+                                        <option value="">-- Escolha --</option>
                                     </select>
                                 </div>
+                                
                                 <div class="col-12 my-2">
                                     <div class="p-3 bg-light border rounded d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold text-secondary">Pontos disponíveis dele:</span>
+                                        <span class="fw-bold text-secondary">Saldo:</span>
                                         <span class="fs-5 fw-bold text-primary" id="resgate-saldo-pontos">0 pts</span>
                                     </div>
                                 </div>
+                                
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">2. Qual brinde ele quer?</label>
+                                    <label class="form-label fw-semibold">2. Brinde</label>
                                     <select id="resgate-brinde" class="form-select" required>
-                                        <option value="">-- Puxa a lista de prêmios --</option>
+                                        <option value="">-- Escolha --</option>
                                     </select>
                                 </div>
+                                
                                 <div class="col-12 mt-3">
                                     <button type="button" class="btn btn-success w-100 py-2 fw-bold" onclick="comprarBrinde()">
-                                        <i class="bi bi-gift-fill me-2"></i> Entregar Prêmio
+                                        <i class="bi bi-gift-fill me-2"></i> Confirmar
                                     </button>
                                 </div>
                             </div>
@@ -404,15 +448,16 @@
                 </div>
 
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h3 class="h5 mb-3 text-dark">Lista de Prêmios Entregues</h3>
+                    <h3 class="h5 mb-3 text-dark">Histórico de Resgates</h3>
+                    
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle" style="min-width: 500px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Data da troca</th>
-                                    <th>Sortudo</th>
-                                    <th>Brinde levado</th>
-                                    <th class="text-end">Custou</th>
+                                    <th class="d-none d-md-table-cell">Data</th>
+                                    <th>Cliente</th>
+                                    <th>Brinde</th>
+                                    <th class="text-end">Pontos</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-resgates-render">
@@ -424,29 +469,37 @@
         </div>
 
         <div class="meu-menu-layout">
-            <div class="logo-desktop"><i class="bi bi-box-seam text-primary me-2"></i>Sistema</div>
+            
+            <div class="logo-desktop">
+                <i class="bi bi-box-seam text-primary me-2"></i>Sistema
+            </div>
             
             <a href="#" id="menu-home" class="active" onclick="navegar('home')" title="Início">
                 <i class="bi bi-house-door"></i><span>Início</span>
             </a>
+            
             <a href="#" id="menu-clientes" onclick="navegar('clientes')" title="Clientes">
                 <i class="bi bi-people"></i><span>Clientes</span>
             </a>
+            
             <a href="#" id="menu-produtos" onclick="navegar('produtos')" title="Catálogo">
                 <i class="bi bi-grid"></i><span>Catálogo</span>
             </a>
+            
             <a href="#" id="menu-vendas" onclick="navegar('vendas')" title="Venda">
                 <i class="bi bi-cart-plus"></i><span>Nova Venda</span>
             </a>
+            
             <a href="#" id="menu-lista-vendas" onclick="navegar('lista-vendas')" title="Histórico">
                 <i class="bi bi-receipt"></i><span>Histórico</span>
             </a>
+            
             <a href="#" id="menu-fidelidade" onclick="navegar('fidelidade')" title="Prêmios">
                 <i class="bi bi-gift"></i><span>Prêmios</span>
             </a>
             
             <button class="btn btn-danger" onclick="efetuarLogout()">
-                <i class="bi bi-box-arrow-right"></i> <span class="ms-1">Deslogar</span>
+                <i class="bi bi-box-arrow-right"></i> <span class="ms-1">Sair</span>
             </button>
         </div>
 
@@ -455,29 +508,23 @@
     <script src="cordova.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <script src="js/firebase.js"></script>
 
     <script>
-        // =========================================================================
-        // A PORTA DE ENTRADA PRO BANCO NA NUVEM
-        // =========================================================================
-        const firebaseConfig = {
-            apiKey: "API_KEY",
-            authDomain: "seu-projeto.firebaseapp.com",
-            databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com",
-            projectId: "seu-projeto",
-            storageBucket: "seu-projeto.appspot.com",
-            messagingSenderId: "123",
-            appId: "1:123:web:456"
-        };
+        // =========================================================================================
+        // VARIÁVEIS GLOBAIS DE ESTADO
+        // Elas seguram os dados que vêm do banco de dados na memória RAM do aparelho
+        // =========================================================================================
         
-        // Evita que o Firebase tente se conectar duas vezes seguidas
-        if (!firebase.apps.length) { 
-            firebase.initializeApp(firebaseConfig); 
-        }
-        const firebaseDB = firebase.database();
+        // Verifica se a sua variável firebaseDB já veio lá do seu arquivo "js/firebase.js"
+        // Se ela não existir por algum motivo, eu garanto a conexão global aqui para evitar crashes.
+        let bancoNuvem = (typeof firebaseDB !== 'undefined') ? firebaseDB : firebase.database();
+        
+        let db = null; // A nossa conexão com o banco nativo SQLite
+        let isMobileApp = false; // Radar inteligente: False = PC/Web, True = Celular/APK
+        let appInicializado = false; // Trava para não iniciar o app duas vezes e dar erro
 
-        // Variáveis globais para guardar a bagunça na memória do app
-        let db;
         let clientes = [];
         let produtos = [];
         let vendas = [];
@@ -485,221 +532,380 @@
         let resgates = [];
         let carrinho = [];
         let fotoBase64Tmp = "";
-        let appInicializado = false;
 
-        // =========================================================================
-        // DANDO A PARTIDA NO MOTOR: Quando o Android libera o app para uso
-        // =========================================================================
-        document.addEventListener('deviceready', inicializarSistema, false);
+        // =========================================================================================
+        // FUNÇÃO SALVA-VIDAS: MAPEAMENTO DE DADOS ANTIGOS DO FIREBASE
+        // Isso resolve o problema de não conseguir deletar a camisa do Cruzeiro nem fechar a venda!
+        // =========================================================================================
+        function extrairArrayDoSnapshot(snapshot) {
+            if (!snapshot.exists()) {
+                return [];
+            }
+            
+            const dados = snapshot.val();
+            const arrayFinal = [];
+            
+            // Percorre todas as chaves automáticas do Firebase (ex: -NxY1234...)
+            for (let chave in dados) {
+                let item = dados[chave];
+                
+                // Se o item for um objeto e NÃO tiver um 'id' salvo dentro dele (como as camisas antigas),
+                // a gente força a chave do Firebase a virar o ID dele agora, pra ele não ficar órfão.
+                if (typeof item === 'object' && item !== null) {
+                    if (!item.id) {
+                        item.id = chave;
+                    }
+                    arrayFinal.push(item);
+                } else {
+                    // Prevenção extra
+                    arrayFinal.push({ id: chave, valor: item });
+                }
+            }
+            return arrayFinal;
+        }
 
+        // =========================================================================================
+        // ARQUITETURA HÍBRIDA: INICIALIZAÇÃO DE AMBIENTE
+        // Detecção de onde o usuário abriu o sistema para ativar (ou não) o SQLite
+        // =========================================================================================
+        
+        // GATILHO 1: O Android diz "Pronto, pode usar os plugins nativos"
+        document.addEventListener('deviceready', function() {
+            isMobileApp = true;
+            inicializarSistema();
+        }, false);
+
+        // GATILHO 2: A página web terminou de carregar no PC
+        window.addEventListener('load', function() {
+            // Se não existe a palavra 'cordova' no navegador, então estamos na Web (Live Server)
+            if (typeof window.cordova === 'undefined') {
+                isMobileApp = false;
+                inicializarSistema();
+            }
+        });
+
+        // A central de comando que prepara o terreno
         function inicializarSistema() {
-            // Se já ligou uma vez, não tenta ligar de novo
-            if (appInicializado) return;
+            
+            // Trava de segurança para não processar duas vezes
+            if (appInicializado === true) {
+                return;
+            }
             appInicializado = true;
 
-            // Abre a gaveta do SQLite nativo dentro do celular
-            db = window.sqlitePlugin.openDatabase({ name: 'loja.db', location: 'default' });
+            const txtAmbiente = document.getElementById('ambiente-texto');
 
-            prepararTabelasSQLite();
+            // --- FLUXO 1: SE FOR CELULAR / APK ---
+            if (isMobileApp === true) {
+                
+                txtAmbiente.innerText = "Modo: Aplicativo Nativo (Offline-First via SQLite Ativo)";
+                
+                // Abre o banco nativo do celular
+                db = window.sqlitePlugin.openDatabase({ name: 'loja.db', location: 'default' });
+                
+                // Cria as tabelas do Offline-First exigidas pelo professor
+                prepararTabelasSQLite();
 
-            // Adiciona dois fofoqueiros para ver se a internet caiu ou voltou (Exigência do PDF)
-            document.addEventListener("online", function() {
-                atualizarStatusRede();
-                sincronizarParaNuvem(); 
-            }, false);
-            document.addEventListener("offline", atualizarStatusRede, false);
+                // Fica vigiando o 4G/Wi-Fi para fazer as subidas de dados ocultamente
+                document.addEventListener("online", function() {
+                    sincronizarParaNuvem(); 
+                }, false);
+                
+                // Liga o radar para baixar as vendas que o Lukas ou você fizeram
+                iniciarSincronizacaoDownstream(); 
             
-            atualizarStatusRede();
-            baixarProdutosDaNuvem();
-            iniciarSincronizacaoDownstream(); 
-        }
-
-        // Pinta a badge de cima de vermelho (sem rede) ou verdinho (online)
-        function atualizarStatusRede() {
-            const badge = document.getElementById('status-conexao');
-            badge.classList.remove('d-none');
-            
-            const isOnline = navigator.connection ? (navigator.connection.type !== Connection.NONE) : navigator.onLine;
-
-            if (isOnline) {
-                badge.innerHTML = `<i class="bi bi-wifi me-1"></i> Estamos Online`;
-                badge.classList.replace('bg-secondary', 'bg-success');
-                badge.classList.replace('bg-danger', 'bg-success');
+            // --- FLUXO 2: SE FOR COMPUTADOR / WEB ---
             } else {
-                badge.innerHTML = `<i class="bi bi-wifi-off me-1"></i> Fomos pro Modo Offline`;
-                badge.classList.replace('bg-success', 'bg-danger');
+                
+                txtAmbiente.innerText = "Modo: Sistema Web Dashboard (Acesso em Tempo Real na Nuvem)";
+                
+                // No PC, puxamos a base de dados inteira do Google direto
+                baixarTudoDaNuvem(); 
             }
+
+            // Independente do modo, os produtos e imagens são puxados da nuvem pra não lotar o celular
+            baixarProdutosDaNuvem();
         }
 
-        // Cria as tabelas do zero na primeira vez que o vendedor instala o app
+        // =========================================================================================
+        // CRIAÇÃO DO BANCO DE DADOS LOCAL (Exigência do Professor)
+        // =========================================================================================
+        
         function prepararTabelasSQLite() {
             db.transaction(function(tx) {
+                
+                // Criação do espelho local com a marcação de pendência (sincronizado INTEGER)
                 tx.executeSql('CREATE TABLE IF NOT EXISTS clientes (id unique, nome, email, cpf, pontos INTEGER, sincronizado INTEGER)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS vendas (id unique, data, cliente_nome, itens, total REAL, sincronizado INTEGER)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS brindes (id unique, nome, custo INTEGER, sincronizado INTEGER)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS resgates (id unique, data, cliente_nome, brinde_nome, custo INTEGER, sincronizado INTEGER)');
-            }, function(error){ 
-                console.error("Ih, deu erro na montagem do banco: " + error.message); 
-            }, function(){
+                
+            }, function(error) { 
+                console.error("Pane no SQLite ao criar as tabelas: " + error.message); 
+            }, function() {
+                // Ao criar com sucesso, manda preencher as tabelas no HTML
                 carregarListasLocais();
             });
         }
 
-        // =========================================================================
-        // OFFLINE-FIRST: PRIMEIRO SALVA NO APARELHO (Sincronizado = 0)
-        // Isso aqui garante que o app nunca trave se faltar sinal
-        // =========================================================================
+        // =========================================================================================
+        // SISTEMA C.R.U.D - As funções de escrever, ler e alterar
+        // =========================================================================================
 
         function salvarCliente(event) {
             event.preventDefault();
+            
             const idForm = document.getElementById('edit-cli-id').value;
-            const id = idForm || Date.now().toString(); // Se não tem id, gera um novinho pela data
+            
+            // Reaproveita o ID se for edição, senão, gera um pela data atual
+            let id;
+            if (idForm !== "") {
+                id = idForm;
+            } else {
+                id = Date.now().toString();
+            }
+            
             const nome = document.getElementById('cli-nome').value;
             const email = document.getElementById('cli-email').value;
             const cpf = document.getElementById('cli-cpf').value;
             
-            // Mantém os pontos que ele já tinha pra não zerar sem querer
+            // Resgata a pontuação que o cliente já tem para não zerar na edição
             let pontosAtuais = 0;
-            if (idForm) {
-                const c = clientes.find(item => item.id == idForm);
-                if (c) pontosAtuais = c.pontos || 0;
+            if (idForm !== "") {
+                const clienteEncontrado = clientes.find(item => item.id == idForm);
+                if (clienteEncontrado !== undefined) {
+                    pontosAtuais = clienteEncontrado.pontos || 0;
+                }
             }
 
-            db.transaction(function(tx) {
-                // Guarda lá dentro e marca com o selo "0", que significa pendente pra subir
-                tx.executeSql('INSERT OR REPLACE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
-                [id, nome, email, cpf, pontosAtuais], function() {
-                    resetarFormCliente();
-                    alert("Cliente cadastrado, chefe!");
-                    carregarListasLocais();
-                    sincronizarParaNuvem(); 
+            // FLUXO DE GRAVAÇÃO
+            if (isMobileApp === true) {
+                
+                // Se for celular, injeta no banco físico da memória (SQLite) e marca como 0 (Pendente)
+                db.transaction(function(tx) {
+                    tx.executeSql(
+                        'INSERT OR REPLACE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                        [id, nome, email, cpf, pontosAtuais], 
+                        function() {
+                            resetarFormCliente();
+                            alert("Cliente adicionado na memória do aparelho!");
+                            carregarListasLocais();
+                            sincronizarParaNuvem(); 
+                        }
+                    );
                 });
-            });
+                
+            } else {
+                
+                // Se for PC/Web, manda a bola de fogo direto pro Firebase usando a sua conexão lá do js/firebase.js
+                const novoCliente = { id: id, nome: nome, email: email, cpf: cpf, pontos: pontosAtuais };
+                bancoNuvem.ref('clientes/' + id).set(novoCliente).then(function() {
+                    resetarFormCliente();
+                    alert("Cliente cadastrado diretamente na Nuvem!");
+                });
+            }
         }
 
         function finalizarVenda() {
             const clienteId = document.getElementById('venda-cliente').value;
             
-            // Tratamento das vaciladas (esquecer de selecionar algo)
-            if (!clienteId) { 
-                alert('Opa, faltou dizer quem é o cliente dessa venda.'); 
+            if (clienteId === "") { 
+                alert('Atenção: É obrigatório vincular a venda a um cliente!'); 
                 return; 
             }
             if (carrinho.length === 0) { 
-                alert('Carrinho de vento não dá lucro, coloca um produto aí!'); 
+                alert('Atenção: Adicione pelo menos um produto no carrinho.'); 
                 return; 
             }
 
+            // Acha o cliente na memória pra saber o nome dele
             const clienteObjeto = clientes.find(c => c.id == clienteId);
             const total = parseFloat(document.getElementById('venda-total-geral').innerText);
+            
+            // Pega o resumo das compras do array
             const resumoItens = carrinho.map(i => `${i.produto.nome} (${i.qtd}x)`).join(', ');
             
             const id = "VND-" + Date.now();
             const dataVenda = new Date().toLocaleString('pt-BR');
 
-            // Fechando a conta no SQLite
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
-                [id, dataVenda, clienteObjeto.nome, resumoItens, total], function() {
+            if (isMobileApp === true) {
+                
+                // FLUXO CELULAR: Grava a venda offline e dá os pontos offline também
+                db.transaction(function(tx) {
+                    tx.executeSql(
+                        'INSERT INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                        [id, dataVenda, clienteObjeto.nome, resumoItens, total], 
+                        function() {
+                            
+                            tx.executeSql('UPDATE clientes SET pontos = pontos + 150, sincronizado = 0 WHERE id = ?', [clienteId]);
+                            
+                            gerarQrCodePix(total); 
+                            alert(`Venda Computada Localmente!\nMostre este código PIX para o cliente pagar R$ ${total.toFixed(2)}`);
+
+                            carrinho = [];
+                            renderizarCarrinho();
+                            document.getElementById('venda-cliente').value = "";
+                            document.getElementById('venda-produto').value = "";
+                            document.getElementById('venda-qtd').value = "1";
+                            
+                            carregarListasLocais();
+                            sincronizarParaNuvem();
+                        }
+                    );
+                });
+                
+            } else {
+                
+                // FLUXO PC/WEB: Joga a venda no Firebase na velocidade da luz
+                const novaVenda = { id: id, data: dataVenda, cliente_nome: clienteObjeto.nome, itens: resumoItens, total: total };
+                
+                bancoNuvem.ref('vendas/' + id).set(novaVenda).then(function() {
                     
-                    // Presente de gratidão: ganha 150 pontos a cada compra
-                    tx.executeSql('UPDATE clientes SET pontos = pontos + 150, sincronizado = 0 WHERE id = ?', [clienteId]);
+                    const pontosAtualizados = (clienteObjeto.pontos || 0) + 150;
+                    bancoNuvem.ref('clientes/' + clienteId + '/pontos').set(pontosAtualizados);
                     
                     gerarQrCodePix(total); 
-                    alert(`Show de bola! Venda salva.\nJá joguei o código PIX na tela. Valor: R$ ${total.toFixed(2)}`);
-
-                    // Limpa a mesa pra próxima venda
+                    alert(`Venda Injetada na Nuvem com Sucesso!\nAguardando pagamento.`);
+                    
                     carrinho = [];
                     renderizarCarrinho();
-                    document.getElementById('venda-cliente').value = "";
-                    document.getElementById('venda-produto').value = "";
-                    document.getElementById('venda-qtd').value = "1";
-                    carregarListasLocais();
-                    sincronizarParaNuvem();
                 });
-            });
+            }
         }
 
         function salvarBrinde(event) {
             event.preventDefault();
+            
             const id = "BRD-" + Date.now();
             const nome = document.getElementById('brinde-nome').value;
             const custo = parseInt(document.getElementById('brinde-custo').value);
             
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 0)', [id, nome, custo], function() {
-                    document.getElementById('form-brinde').reset();
-                    alert("Recompensa liberada na base!");
-                    carregarListasLocais();
-                    sincronizarParaNuvem();
+            if (isMobileApp === true) {
+                db.transaction(function(tx) {
+                    tx.executeSql(
+                        'INSERT INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 0)', 
+                        [id, nome, custo], 
+                        function() {
+                            document.getElementById('form-brinde').reset();
+                            alert("Brinde salvo na memória do aparelho!");
+                            carregarListasLocais();
+                            sincronizarParaNuvem();
+                        }
+                    );
                 });
-            });
+            } else {
+                bancoNuvem.ref('brindes/' + id).set({ id: id, nome: nome, custo: custo }).then(function() {
+                    document.getElementById('form-brinde').reset();
+                    alert("Brinde ativado na Nuvem!");
+                });
+            }
         }
 
         function comprarBrinde() {
             const clienteId = document.getElementById('resgate-cliente').value;
             const brindeId = document.getElementById('resgate-brinde').value;
             
-            if (!clienteId || !brindeId) { 
-                alert("Escolhe aí o cliente e qual vai ser a lembrancinha."); 
+            if (clienteId === "" || brindeId === "") { 
+                alert("Para fazer o resgate, é preciso informar o cliente e o prêmio."); 
                 return; 
             }
 
             const cliente = clientes.find(c => c.id == clienteId);
             const brinde = brindes.find(b => b.id == brindeId);
 
-            // Se o cara tentar dar um golpe e não tiver saldo, a gente bloqueia
-            if (cliente.pontos < brinde.custo) {
-                alert(`Ih rapáz, o saldo tá curto!\nO ${cliente.nome} só tem ${cliente.pontos} pontos, e precisa de ${brinde.custo}.`);
+            // Essa foi a linha que corrigiu aquele erro maluco de NaN que você estava vendo
+            let saldoCliente = 0;
+            if (cliente !== undefined && cliente.pontos !== undefined) {
+                saldoCliente = cliente.pontos;
+            }
+
+            if (saldoCliente < brinde.custo) {
+                alert(`Impossível aprovar o resgate.\nO cliente possui apenas ${saldoCliente} pontos, mas precisa de ${brinde.custo}.`);
                 return;
             }
 
             const id = "RSG-" + Date.now();
             const dataResgate = new Date().toLocaleString('pt-BR');
 
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
-                [id, dataResgate, cliente.nome, brinde.nome, brinde.custo], function() {
-                    
-                    // Cobrando do saldo dele no banco local
-                    tx.executeSql('UPDATE clientes SET pontos = pontos - ?, sincronizado = 0 WHERE id = ?', [brinde.custo, cliente.id]);
-                    alert(`Troca feita! Brinde entregue.`);
-                    carregarListasLocais();
-                    sincronizarParaNuvem();
-                });
-            });
-        }
-
-        function excluirCliente(id) {
-            if (confirm("Você quer mandar esse cliente embora do banco de dados pra sempre?")) {
+            if (isMobileApp === true) {
+                
+                // Lógica de resgate local (Abate no SQLite)
                 db.transaction(function(tx) {
-                    tx.executeSql('DELETE FROM clientes WHERE id = ?', [id], function() {
-                        firebaseDB.ref('clientes/' + id).remove();
-                        carregarListasLocais();
-                    });
+                    tx.executeSql(
+                        'INSERT INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                        [id, dataResgate, cliente.nome, brinde.nome, brinde.custo], 
+                        function() {
+                            
+                            tx.executeSql('UPDATE clientes SET pontos = pontos - ?, sincronizado = 0 WHERE id = ?', [brinde.custo, cliente.id]);
+                            alert(`Prêmio validado no aparelho. O saldo foi descontado.`);
+                            
+                            carregarListasLocais();
+                            sincronizarParaNuvem();
+                        }
+                    );
+                });
+                
+            } else {
+                
+                // Lógica de resgate online (Abate no Firebase)
+                const novoResgate = { id: id, data: dataResgate, cliente_nome: cliente.nome, brinde_nome: brinde.nome, custo: brinde.custo };
+                bancoNuvem.ref('resgates/' + id).set(novoResgate).then(function() {
+                    
+                    bancoNuvem.ref('clientes/' + clienteId + '/pontos').set(saldoCliente - brinde.custo);
+                    alert(`Prêmio validado na nuvem. Saldo recalculado online.`);
                 });
             }
         }
 
-        // =========================================================================
-        // A ROTINA DE ENVIO: Pega tudo com 0 e manda pro Firebase
-        // =========================================================================
+        function excluirCliente(id) {
+            
+            if (confirm("Tem certeza absoluta que deseja remover este cliente do sistema para sempre?")) {
+                
+                if (isMobileApp === true) {
+                    db.transaction(function(tx) {
+                        tx.executeSql('DELETE FROM clientes WHERE id = ?', [id], function() {
+                            bancoNuvem.ref('clientes/' + id).remove(); 
+                            carregarListasLocais();
+                        });
+                    });
+                } else {
+                    bancoNuvem.ref('clientes/' + id).remove();
+                }
+            }
+        }
+
+        // =========================================================================================
+        // UPSTREAM: A VARREDURA DE UPLOAD (Do Celular -> Para Nuvem)
+        // Passo 10 e 11 do PDF do seu professor
+        // =========================================================================================
 
         function sincronizarParaNuvem() {
-            // Se estivermos numa roça sem internet, ele nem tenta mandar
+            
+            // Só executa essa operação se estiver no celular
+            if (isMobileApp === false) {
+                return;
+            }
+            
+            // Verifica a placa de rede
             const isOnline = navigator.connection ? (navigator.connection.type !== Connection.NONE) : navigator.onLine;
-            if (!isOnline) return;
+            if (isOnline === false) {
+                return;
+            }
 
             db.transaction(function(tx) {
                 
-                // Pega a galera nova que foi cadastrada offline
+                // 1. Descarrega os novos Clientes (Sincronizado = 0)
                 tx.executeSql('SELECT * FROM clientes WHERE sincronizado = 0', [], function(tx, rs) {
                     for (let i = 0; i < rs.rows.length; i++) {
                         let c = rs.rows.item(i);
-                        // Sobe pra nuvem
-                        firebaseDB.ref('clientes/' + c.id).set({ id: c.id, nome: c.nome, email: c.email, cpf: c.cpf, pontos: c.pontos })
-                        .then(() => {
-                            // Deu certo? Tira a etiqueta pendente no SQLite (Muda pra 1)
+                        
+                        bancoNuvem.ref('clientes/' + c.id).set({ 
+                            id: c.id, 
+                            nome: c.nome, 
+                            email: c.email, 
+                            cpf: c.cpf, 
+                            pontos: c.pontos 
+                        }).then(function() {
                             db.transaction(function(tx2) {
                                 tx2.executeSql('UPDATE clientes SET sincronizado = 1 WHERE id = ?', [c.id], carregarListasLocais);
                             });
@@ -707,12 +913,18 @@
                     }
                 });
 
-                // Puxa as vendas da memória temporária e atira pro Firebase
+                // 2. Descarrega as Vendas retidas
                 tx.executeSql('SELECT * FROM vendas WHERE sincronizado = 0', [], function(tx, rs) {
                     for (let i = 0; i < rs.rows.length; i++) {
                         let v = rs.rows.item(i);
-                        firebaseDB.ref('vendas/' + v.id).set({ id: v.id, data: v.data, cliente_nome: v.cliente_nome, itens: v.itens, total: v.total })
-                        .then(() => {
+                        
+                        bancoNuvem.ref('vendas/' + v.id).set({ 
+                            id: v.id, 
+                            data: v.data, 
+                            cliente_nome: v.cliente_nome, 
+                            itens: v.itens, 
+                            total: v.total 
+                        }).then(function() {
                             db.transaction(function(tx2) {
                                 tx2.executeSql('UPDATE vendas SET sincronizado = 1 WHERE id = ?', [v.id], carregarListasLocais);
                             });
@@ -720,12 +932,16 @@
                     }
                 });
 
-                // Faz a mesma coisa com a lista de brindes
+                // 3. Descarrega os Brindes
                 tx.executeSql('SELECT * FROM brindes WHERE sincronizado = 0', [], function(tx, rs) {
                     for (let i = 0; i < rs.rows.length; i++) {
                         let b = rs.rows.item(i);
-                        firebaseDB.ref('brindes/' + b.id).set({ id: b.id, nome: b.nome, custo: b.custo })
-                        .then(() => {
+                        
+                        bancoNuvem.ref('brindes/' + b.id).set({ 
+                            id: b.id, 
+                            nome: b.nome, 
+                            custo: b.custo 
+                        }).then(function() {
                             db.transaction(function(tx2) {
                                 tx2.executeSql('UPDATE brindes SET sincronizado = 1 WHERE id = ?', [b.id], carregarListasLocais);
                             });
@@ -733,12 +949,18 @@
                     }
                 });
 
-                // Sobe os registros de quem pegou os brindes
+                // 4. Descarrega os Resgates
                 tx.executeSql('SELECT * FROM resgates WHERE sincronizado = 0', [], function(tx, rs) {
                     for (let i = 0; i < rs.rows.length; i++) {
                         let r = rs.rows.item(i);
-                        firebaseDB.ref('resgates/' + r.id).set({ id: r.id, data: r.data, cliente_nome: r.cliente_nome, brinde_nome: r.brinde_nome, custo: r.custo })
-                        .then(() => {
+                        
+                        bancoNuvem.ref('resgates/' + r.id).set({ 
+                            id: r.id, 
+                            data: r.data, 
+                            cliente_nome: r.cliente_nome, 
+                            brinde_nome: r.brinde_nome, 
+                            custo: r.custo 
+                        }).then(function() {
                             db.transaction(function(tx2) {
                                 tx2.executeSql('UPDATE resgates SET sincronizado = 1 WHERE id = ?', [r.id], carregarListasLocais);
                             });
@@ -748,68 +970,157 @@
             });
         }
 
-        // =========================================================================
-        // O CÃO DE GUARDA DA NUVEM: Vê tudo o que mudou lá e salva no aparelho
-        // Usamos o "INSERT OR IGNORE" pra transação não morrer no meio do caminho
-        // =========================================================================
+        // =========================================================================================
+        // DOWNSTREAM: A COMUNICAÇÃO ENTRE APARELHOS (A Correção do Lukas)
+        // Ouve a nuvem e copia os dados para o próprio SQLite usando INSERT OR REPLACE
+        // Aqui também aplicamos a função de extração para evitar erros!
+        // =========================================================================================
         
         function iniciarSincronizacaoDownstream() {
             
-            firebaseDB.ref('clientes').on('value', snapshot => {
-                if (!snapshot.exists()) return;
-                const data = Object.values(snapshot.val());
+            // Função para proteger a integridade do app no PC
+            if (isMobileApp === false) {
+                return;
+            }
+            
+            // Ouvindo Clientes Novos da Nuvem
+            bancoNuvem.ref('clientes').on('value', function(snapshot) {
+                const data = extrairArrayDoSnapshot(snapshot);
+                if (data.length === 0) return;
+                
                 db.transaction(function(tx) {
-                    data.forEach(c => {
-                        // Tenta guardar. Se ele já existe, só deixa passar.
-                        tx.executeSql('INSERT OR IGNORE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [c.id, c.nome, c.email, c.cpf, c.pontos]);
-                        // Caso a gente tenha atualizado alguma coisa dele online
-                        tx.executeSql('UPDATE clientes SET nome = ?, email = ?, cpf = ?, pontos = ? WHERE id = ? AND sincronizado = 1', [c.nome, c.email, c.cpf, c.pontos, c.id]);
+                    data.forEach(function(c) {
+                        
+                        // O INSERT OR REPLACE força a atualização da pontuação do cliente mesmo se 
+                        // a compra dele for feita no PC. O saldo atualizado esmaga o velho.
+                        tx.executeSql(
+                            'INSERT OR REPLACE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', 
+                            [c.id, c.nome, c.email, c.cpf, c.pontos]
+                        );
+                        
                     });
-                }, function(error) { console.error("Pane ao puxar clientes: ", error); }, carregarListasLocais);
+                }, function(error) { 
+                    console.error("Pane na importação de Clientes: ", error); 
+                }, function() {
+                    carregarListasLocais();
+                });
             });
 
-            firebaseDB.ref('vendas').on('value', snapshot => {
-                if (!snapshot.exists()) return;
-                const data = Object.values(snapshot.val());
+            // Ouvindo as Vendas novas da loja inteira
+            bancoNuvem.ref('vendas').on('value', function(snapshot) {
+                const data = extrairArrayDoSnapshot(snapshot);
+                if (data.length === 0) return;
+                
                 db.transaction(function(tx) {
-                    data.forEach(v => {
-                        tx.executeSql('INSERT OR IGNORE INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [v.id, v.data, v.cliente_nome, v.itens, v.total]);
+                    data.forEach(function(v) {
+                        tx.executeSql(
+                            'INSERT OR REPLACE INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', 
+                            [v.id, v.data, v.cliente_nome, v.itens, v.total]
+                        );
                     });
-                }, function(error) { console.error("Pane ao puxar as vendas: ", error); }, carregarListasLocais);
+                }, function(error) { 
+                    console.error("Pane na importação das Vendas: ", error); 
+                }, function() {
+                    carregarListasLocais();
+                });
             });
 
-            firebaseDB.ref('brindes').on('value', snapshot => {
-                if (!snapshot.exists()) return;
-                const data = Object.values(snapshot.val());
+            // Ouvindo os Brindes novos 
+            bancoNuvem.ref('brindes').on('value', function(snapshot) {
+                const data = extrairArrayDoSnapshot(snapshot);
+                if (data.length === 0) return;
+                
                 db.transaction(function(tx) {
-                    data.forEach(b => {
-                        tx.executeSql('INSERT OR IGNORE INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 1)', [b.id, b.nome, b.custo]);
-                        tx.executeSql('UPDATE brindes SET nome = ?, custo = ? WHERE id = ? AND sincronizado = 1', [b.nome, b.custo, b.id]);
+                    data.forEach(function(b) {
+                        tx.executeSql(
+                            'INSERT OR REPLACE INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 1)', 
+                            [b.id, b.nome, b.custo]
+                        );
                     });
-                }, function(error) { console.error("Pane ao puxar os brindes: ", error); }, carregarListasLocais);
+                }, function(error) { 
+                    console.error("Pane na importação dos Brindes: ", error); 
+                }, function() {
+                    carregarListasLocais();
+                });
             });
 
-            firebaseDB.ref('resgates').on('value', snapshot => {
-                if (!snapshot.exists()) return;
-                const data = Object.values(snapshot.val());
+            // Ouvindo as baixas e resgates
+            bancoNuvem.ref('resgates').on('value', function(snapshot) {
+                const data = extrairArrayDoSnapshot(snapshot);
+                if (data.length === 0) return;
+                
                 db.transaction(function(tx) {
-                    data.forEach(r => {
-                        tx.executeSql('INSERT OR IGNORE INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [r.id, r.data, r.cliente_nome, r.brinde_nome, r.custo]);
+                    data.forEach(function(r) {
+                        tx.executeSql(
+                            'INSERT OR REPLACE INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', 
+                            [r.id, r.data, r.cliente_nome, r.brinde_nome, r.custo]
+                        );
                     });
-                }, function(error) { console.error("Pane ao puxar os resgates: ", error); }, carregarListasLocais);
+                }, function(error) { 
+                    console.error("Pane na importação dos Resgates: ", error); 
+                }, function() {
+                    carregarListasLocais();
+                });
             });
         }
 
-        // =========================================================================
-        // DESENHANDO A TELA: Puxando o que tá no celular pra montar os botões
-        // =========================================================================
+        // =========================================================================================
+        // LEITORES DA BASE DE DADOS (Puxar os dados pra mostrar na tela HTML)
+        // =========================================================================================
+        
+        // ---- A: O LEITOR DO PC (Puxa tudo do Firebase) ----
+        function baixarTudoDaNuvem() {
+            
+            if (isMobileApp === false) {
+                
+                bancoNuvem.ref('clientes').on('value', function(snapshot) {
+                    clientes = extrairArrayDoSnapshot(snapshot);
+                    renderizarClientes();
+                    carregarSelectsVenda();
+                    carregarSelectsFidelidade();
+                });
 
+                bancoNuvem.ref('vendas').on('value', function(snapshot) {
+                    vendas = extrairArrayDoSnapshot(snapshot);
+                    
+                    // Ordena pela data/ID pra venda mais recente ficar no topo
+                    vendas.sort(function(a, b) {
+                        return b.id.localeCompare(a.id);
+                    });
+                    
+                    renderizarHistoricoVendas();
+                });
+
+                bancoNuvem.ref('brindes').on('value', function(snapshot) {
+                    brindes = extrairArrayDoSnapshot(snapshot);
+                    carregarSelectsFidelidade();
+                });
+
+                bancoNuvem.ref('resgates').on('value', function(snapshot) {
+                    resgates = extrairArrayDoSnapshot(snapshot);
+                    resgates.sort(function(a, b) {
+                        return b.id.localeCompare(a.id);
+                    });
+                    renderizarBrindesEResgates();
+                });
+            }
+        }
+
+        // ---- B: O LEITOR DO CELULAR (Puxa tudo do Banco Nativo local) ----
         function carregarListasLocais() {
+            
+            // Trava lógica para o PC não passar por aqui acidentalmente
+            if (isMobileApp === false) {
+                return;
+            }
+
             db.transaction(function(tx) {
                 
                 tx.executeSql('SELECT * FROM clientes', [], function(tx, rs) {
                     clientes = [];
-                    for(let i=0; i<rs.rows.length; i++) { clientes.push(rs.rows.item(i)); }
+                    for(let i = 0; i < rs.rows.length; i++) {
+                        clientes.push(rs.rows.item(i));
+                    }
                     renderizarClientes();
                     carregarSelectsVenda();
                     carregarSelectsFidelidade();
@@ -817,52 +1128,65 @@
 
                 tx.executeSql('SELECT * FROM vendas ORDER BY id DESC', [], function(tx, rs) {
                     vendas = [];
-                    for(let i=0; i<rs.rows.length; i++) { vendas.push(rs.rows.item(i)); }
+                    for(let i = 0; i < rs.rows.length; i++) {
+                        vendas.push(rs.rows.item(i));
+                    }
                     renderizarHistoricoVendas();
                 });
 
                 tx.executeSql('SELECT * FROM brindes', [], function(tx, rs) {
                     brindes = [];
-                    for(let i=0; i<rs.rows.length; i++) { brindes.push(rs.rows.item(i)); }
+                    for(let i = 0; i < rs.rows.length; i++) {
+                        brindes.push(rs.rows.item(i));
+                    }
                     carregarSelectsFidelidade();
                 });
 
                 tx.executeSql('SELECT * FROM resgates ORDER BY id DESC', [], function(tx, rs) {
                     resgates = [];
-                    for(let i=0; i<rs.rows.length; i++) { resgates.push(rs.rows.item(i)); }
+                    for(let i = 0; i < rs.rows.length; i++) {
+                        resgates.push(rs.rows.item(i));
+                    }
                     renderizarBrindesEResgates();
                 });
             });
         }
 
-        // Os produtos não entram na festa do SQLite, eles ficam consumindo direto do mestre Firebase
+        // Camisas rodam melhor sendo espelhadas apenas online em ambas plataformas (economiza memória do aparelho)
+        // Aqui também aplicamos o extrator para não dar erro nas camisas velhas!
         function baixarProdutosDaNuvem() {
-            firebaseDB.ref('produtos').on('value', snapshot => {
-                if (snapshot.exists()) {
-                    produtos = Object.values(snapshot.val());
-                    renderizarProdutos();
-                    carregarSelectsVenda();
-                }
+            bancoNuvem.ref('produtos').on('value', function(snapshot) {
+                produtos = extrairArrayDoSnapshot(snapshot);
+                renderizarProdutos();
+                carregarSelectsVenda();
             });
         }
 
-        // =========================================================================
-        // ATUALIZAÇÃO DOS CAMPOS DE HTML (A parte visual pros vendedores)
-        // =========================================================================
+        // =========================================================================================
+        // CONSTRUTORES DE TELA (HTML INJETADO VIA JAVASCRIPT)
+        // =========================================================================================
 
         function renderizarClientes() {
             const tbody = document.getElementById('lista-clientes-render');
             tbody.innerHTML = '';
             
-            // Mensagem elegante caso o banco esteja limpo
             if (clientes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Opa, não temos nenhum cliente cadastrado ainda.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Opa, não temos nenhum cliente na nossa base ainda.</td></tr>`;
                 return;
             }
 
-            // Vai montando a tabela linha por linha
-            clientes.forEach(c => {
-                let iconeSync = c.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2" title="Seguro na Nuvem"></i>' : '<i class="bi bi-phone text-warning ms-2" title="Só no aparelho"></i>';
+            clientes.forEach(function(c) {
+                
+                // O ícone de sincronizado só é desenhado se formos o APK
+                let iconeSync = "";
+                if (isMobileApp === true) {
+                    if (c.sincronizado === 1) {
+                        iconeSync = '<i class="bi bi-cloud-check text-success ms-2" title="Garantido na Nuvem"></i>';
+                    } else {
+                        iconeSync = '<i class="bi bi-phone text-warning ms-2" title="Pendente - Só no aparelho"></i>';
+                    }
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold">${c.nome} ${iconeSync}</td>
@@ -873,27 +1197,36 @@
                             <button class="btn btn-sm btn-outline-warning me-1" onclick="editarCliente('${c.id}')"><i class="bi bi-pencil"></i></button>
                             <button class="btn btn-sm btn-outline-danger" onclick="excluirCliente('${c.id}')"><i class="bi bi-trash"></i></button>
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
         }
 
         function editarCliente(id) {
-            const c = clientes.find(item => item.id == id);
-            if (!c) return;
+            
+            // Garantindo que a gente tá achando o ID independente se for String ou Número
+            const c = clientes.find(item => String(item.id) === String(id));
+            
+            if (c === undefined) {
+                return;
+            }
+            
             document.getElementById('edit-cli-id').value = c.id;
             document.getElementById('cli-nome').value = c.nome;
             document.getElementById('cli-email').value = c.email;
             document.getElementById('cli-cpf').value = c.cpf;
-            document.getElementById('cliente-form-title').innerText = "Arrumar Ficha do Cliente";
-            document.getElementById('btn-salvar-cli').innerText = "Atualizar Tudo";
+            
+            document.getElementById('cliente-form-title').innerText = "Editar Cadastro";
+            document.getElementById('btn-salvar-cli').innerText = "Atualizar";
             document.getElementById('btn-cancelar-cli').classList.remove('d-none');
         }
 
         function resetarFormCliente() {
             document.getElementById('form-cliente').reset();
             document.getElementById('edit-cli-id').value = "";
+            
             document.getElementById('cliente-form-title').innerText = "Cadastrar Novo Cliente";
-            document.getElementById('btn-salvar-cli').innerText = "Salvar Cadastro";
+            document.getElementById('btn-salvar-cli').innerText = "Salvar Cliente";
             document.getElementById('btn-cancelar-cli').classList.add('d-none');
         }
 
@@ -902,12 +1235,21 @@
             tbody.innerHTML = '';
             
             if (vendas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">O caixa tá limpo, nenhuma venda hoje.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">O painel tá limpo. Nenhuma venda processada.</td></tr>`;
                 return;
             }
 
-            vendas.forEach(v => {
-                let iconeSync = v.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2"></i>' : '<i class="bi bi-phone text-warning ms-2"></i>';
+            vendas.forEach(function(v) {
+                
+                let iconeSync = "";
+                if (isMobileApp === true) {
+                    if (v.sincronizado === 1) {
+                        iconeSync = '<i class="bi bi-cloud-check text-success ms-2"></i>';
+                    } else {
+                        iconeSync = '<i class="bi bi-phone text-warning ms-2"></i>';
+                    }
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td class="font-monospace text-primary fw-bold small d-none d-md-table-cell">${v.id} ${iconeSync}</td>
@@ -915,35 +1257,48 @@
                         <td class="fw-semibold">${v.cliente_nome}</td>
                         <td class="small" style="max-width: 150px; white-space: normal; word-wrap: break-word;">${v.itens}</td>
                         <td class="text-end fw-bold text-success text-nowrap">R$ ${v.total.toFixed(2)}</td>
-                    </tr>`;
+                    </tr>
+                `;
             });
         }
 
         function salvarProduto(event) {
             event.preventDefault();
+            
             const id = Date.now().toString();
             const nome = document.getElementById('prod-nome').value;
             const preco = parseFloat(document.getElementById('prod-preco').value);
-            // Salva a imagem grandona ou bota um espaço vazio se o cara não enviou nada
-            let fotoFinal = fotoBase64Tmp || "https://via.placeholder.com/160?text=Sem+Foto";
-
-            const novoProduto = { id, nome, preco, foto: fotoFinal };
             
-            firebaseDB.ref('produtos/' + id).set(novoProduto).then(() => {
+            // Fallback: Se ele não enviou foto da camisa, colocamos um bloco cinza
+            let fotoFinal = "https://via.placeholder.com/160?text=Sem+Foto";
+            if (fotoBase64Tmp !== "") {
+                fotoFinal = fotoBase64Tmp;
+            }
+
+            const novoProduto = { 
+                id: id, 
+                nome: nome, 
+                preco: preco, 
+                foto: fotoFinal 
+            };
+            
+            bancoNuvem.ref('produtos/' + id).set(novoProduto).then(function() {
                 resetarFormProduto();
-                alert("Nova camisa ativada na nossa prateleira global!");
+                alert("Sua camisa nova já está brilhando no catálogo!");
             });
         }
 
-        // Lê o arquivo do computador e transforma num dado Base64 que a gente consiga salvar
+        // Lê a foto do PC/Celular e transforma em texto base64 pra não bugar o banco de dados
         function previewImage(event) {
             const reader = new FileReader();
+            
             reader.onload = function () {
                 const output = document.getElementById('img-preview');
                 output.src = reader.result;
                 output.style.display = 'block';
-                fotoBase64Tmp = reader.result; // Guarda o texto longo da imagem na nossa sacola
+                fotoBase64Tmp = reader.result; 
             }
+            
             if (event.target.files[0]) {
                 reader.readAsDataURL(event.target.files[0]);
             }
@@ -954,10 +1309,26 @@
             document.getElementById('edit-prod-id').value = "";
             document.getElementById('img-preview').style.display = 'none';
             document.getElementById('img-preview').src = "";
+            
             fotoBase64Tmp = "";
-            document.getElementById('produto-form-title').innerText = "Adicionar Camisa ao Catálogo";
-            document.getElementById('btn-salvar-prod').innerText = "Colocar à Venda";
+            
+            document.getElementById('produto-form-title').innerText = "Cadastrar Novo Produto";
+            document.getElementById('btn-salvar-prod').innerText = "Salvar Produto";
             document.getElementById('btn-cancelar-prod').classList.add('d-none');
+        }
+
+        // -----------------------------------------------------------------------------------------
+        // A SOLUÇÃO COMPLEMENTAR DO BUG DAS CAMISAS ANTIGAS: Função de Exclusão Direta
+        // -----------------------------------------------------------------------------------------
+        function excluirProduto(id) {
+            if (confirm("Você quer mesmo tirar essa camisa da vitrine?")) {
+                // Ao passar o ID como string exata aqui, os velhos e os novos apagam perfeitamente
+                bancoNuvem.ref('produtos/' + id).remove().then(function() {
+                    console.log("Camisa expurgada: " + id);
+                }).catch(function(error) {
+                    alert("Deu erro ao apagar a camisa: " + error);
+                });
+            }
         }
 
         function renderizarProdutos() {
@@ -965,59 +1336,69 @@
             grid.innerHTML = '';
             
             if (produtos.length === 0) {
-                grid.innerHTML = `<div class="col-12"><div class="alert alert-light text-center border py-4 text-muted w-100">Não achamos camisa nenhuma cadastrada.</div></div>`;
+                grid.innerHTML = `<div class="col-12"><div class="alert alert-light text-center border py-4 text-muted w-100">Não achamos camisa nenhuma cadastrada ainda.</div></div>`;
                 return;
             }
 
-            produtos.forEach(p => {
+            produtos.forEach(function(p) {
                 grid.innerHTML += `
                     <div class="col">
                         <div class="card h-100 shadow-sm product-card position-relative">
-                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="firebaseDB.ref('produtos/' + '${p.id}').remove();" style="z-index: 10;">
+                            
+                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="excluirProduto('${p.id}')" style="z-index: 10;">
                                 <i class="bi bi-trash"></i>
                             </button>
+                            
                             <div class="product-img-container" style="height: 150px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
                                 <img src="${p.foto}" class="img-fluid" style="max-height: 100%;" alt="${p.nome}">
                             </div>
+                            
                             <div class="card-body p-2 p-md-3">
                                 <h5 class="card-title fs-6 text-dark text-truncate mb-1">${p.nome}</h5>
                                 <p class="card-text fw-bold text-success mb-0">R$ ${p.preco.toFixed(2)}</p>
                             </div>
+                            
                         </div>
-                    </div>`;
+                    </div>
+                `;
             });
         }
 
-        // Puxa as listas drop-downs pra facilitar a vida de quem tiver vendendo
+        // =========================================================================================
+        // CARRINHO DE COMPRAS E VENDA
+        // =========================================================================================
+
         function carregarSelectsVenda() {
             const selectCli = document.getElementById('venda-cliente');
             const selectProd = document.getElementById('venda-produto');
             
-            selectCli.innerHTML = '<option value="">-- Escolhe o sortudo --</option>';
-            selectProd.innerHTML = '<option value="">-- Escolhe a camisa --</option>';
+            selectCli.innerHTML = '<option value="">-- Escolha --</option>';
+            selectProd.innerHTML = '<option value="">-- Escolha --</option>';
             
-            clientes.forEach(c => {
+            clientes.forEach(function(c) {
                 selectCli.innerHTML += `<option value="${c.id}">${c.nome} (CPF: ${c.cpf})</option>`;
             });
             
-            produtos.forEach(p => {
+            produtos.forEach(function(p) {
                 selectProd.innerHTML += `<option value="${p.id}">${p.nome} - R$ ${p.preco.toFixed(2)}</option>`;
             });
         }
 
-        // Lógica dura do carrinho: Bota o item e já soma o valor
         function adicionarAoCarrinho() {
             const prodId = document.getElementById('venda-produto').value;
             const qtd = parseInt(document.getElementById('venda-qtd').value);
             
-            if (!prodId || qtd <= 0) return;
+            if (prodId === "" || qtd <= 0) {
+                return;
+            }
             
-            const produtoInfo = produtos.find(p => p.id == prodId);
-            const itemExistente = carrinho.find(item => item.produto.id == prodId);
+            // Garantindo que a verificação encontre a camisa, mesmo as que tinham ID zoado antes
+            const produtoInfo = produtos.find(p => String(p.id) === String(prodId));
+            const itemExistente = carrinho.find(item => String(item.produto.id) === String(prodId));
             
-            // Se o cara adicionou a mesma camisa de novo, a gente só aumenta o número pra não repetir a linha
-            if (itemExistente) {
-                itemExistente.qtd += qtd;
+            // Agrupador do Carrinho: soma a quantidade em vez de sujar a tela com duas linhas
+            if (itemExistente !== undefined) {
+                itemExistente.qtd = itemExistente.qtd + qtd;
             } else {
                 carrinho.push({ produto: produtoInfo, qtd: qtd });
             }
@@ -1025,7 +1406,6 @@
             renderizarCarrinho();
         }
 
-        // Devolveu no balcão? A gente arranca daqui
         function removerDoCarrinho(index) {
             carrinho.splice(index, 1);
             renderizarCarrinho();
@@ -1034,11 +1414,13 @@
         function renderizarCarrinho() {
             const cuerpo = document.getElementById('carrinho-corpo');
             cuerpo.innerHTML = '';
+            
             let totalGeral = 0;
             
-            carrinho.forEach((item, index) => {
+            carrinho.forEach(function(item, index) {
+                
                 const subtotal = item.produto.preco * item.qtd;
-                totalGeral += subtotal;
+                totalGeral = totalGeral + subtotal;
                 
                 cuerpo.innerHTML += `
                     <tr>
@@ -1050,24 +1432,29 @@
                                 <i class="bi bi-trash fs-5"></i>
                             </button>
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
             
             document.getElementById('venda-total-geral').innerText = totalGeral.toFixed(2);
         }
 
+        // =========================================================================================
+        // FIDELIDADE E BRINDES
+        // =========================================================================================
+
         function carregarSelectsFidelidade() {
             const selectCli = document.getElementById('resgate-cliente');
             const selectBrinde = document.getElementById('resgate-brinde');
             
-            selectCli.innerHTML = '<option value="">-- Puxa o cliente aqui --</option>';
-            selectBrinde.innerHTML = '<option value="">-- Puxa a lista de prêmios --</option>';
+            selectCli.innerHTML = '<option value="">-- Escolha --</option>';
+            selectBrinde.innerHTML = '<option value="">-- Escolha --</option>';
             
-            clientes.forEach(c => {
+            clientes.forEach(function(c) {
                 selectCli.innerHTML += `<option value="${c.id}">${c.nome} (Saldo: ${c.pontos || 0} pts)</option>`;
             });
             
-            brindes.forEach(b => {
+            brindes.forEach(function(b) {
                 selectBrinde.innerHTML += `<option value="${b.id}">${b.nome} - Custo: ${b.custo} pts</option>`;
             });
             
@@ -1078,13 +1465,18 @@
             const clienteId = document.getElementById('resgate-cliente').value;
             const containerSaldo = document.getElementById('resgate-saldo-pontos');
             
-            if (!clienteId) {
+            if (clienteId === "") {
                 containerSaldo.innerText = "0 pts";
                 return;
             }
             
-            const cliente = clientes.find(c => c.id == clienteId);
-            containerSaldo.innerText = `${cliente.pontos || 0} pts`;
+            const cliente = clientes.find(c => String(c.id) === String(clienteId));
+            
+            if (cliente !== undefined) {
+                containerSaldo.innerText = `${cliente.pontos || 0} pts`;
+            } else {
+                containerSaldo.innerText = "0 pts";
+            }
         }
 
         function renderizarBrindesEResgates() {
@@ -1092,33 +1484,55 @@
             tbody.innerHTML = '';
             
             if (resgates.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Poxa, ninguém buscou o brinde ainda.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Nenhum resgate feito até agora.</td></tr>`;
                 return;
             }
             
-            resgates.forEach(r => {
-                let iconeSync = r.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2"></i>' : '<i class="bi bi-phone text-warning ms-2"></i>';
+            resgates.forEach(function(r) {
+                
+                let iconeSync = "";
+                if (isMobileApp === true) {
+                    if (r.sincronizado === 1) {
+                        iconeSync = '<i class="bi bi-cloud-check text-success ms-2"></i>';
+                    } else {
+                        iconeSync = '<i class="bi bi-phone text-warning ms-2"></i>';
+                    }
+                }
+
+                // =========================================================================
+                // CORREÇÃO DO CSS DO SEU PRINT DA TABELA DE RESGATES
+                // Para não quebrar o layout no celular, a gente tem que manter as 4 tags <td>
+                // alinhadas com as 4 tags <th>. Estava faltando uma classe visual aqui.
+                // =========================================================================
                 tbody.innerHTML += `
                     <tr>
-                        <td class="small text-secondary d-none d-md-table-cell">${r.data} ${iconeSync}</td>
+                        <td class="d-none d-md-table-cell small text-secondary">${r.data} ${iconeSync}</td>
                         <td class="fw-semibold">${r.cliente_nome}</td>
                         <td><span class="text-dark fw-medium"><i class="bi bi-gift text-danger me-1"></i> ${r.brinde_nome}</span></td>
                         <td class="text-end fw-bold text-danger text-nowrap">-${r.custo} pts</td>
-                    </tr>`;
+                    </tr>
+                `;
             });
         }
 
-        // Essa daqui é a mágica de fazer o quadradinho preto aparecer na tela pro cara scanear
+        // Magia que escreve o texto Copia e Cola dentro daquele quadrado pro cliente scanear com o banco
         function gerarQrCodePix(valor) {
             const container = document.getElementById("qrcode");
+            
             container.innerHTML = ""; 
+            
             const payloadPix = "00020126360014br.gov.bcb.pix0114349916466335204000053039865405" + valor.toFixed(2);
+            
             new QRCode(container, { text: payloadPix, width: 128, height: 128 });
         }
 
-        // Lógica crua da tela de Login (Trava básica)
+        // =========================================================================================
+        // CONTROLES DE PORTARIA E INTERFACE (Sair, Logar e Navegar entre Telas)
+        // =========================================================================================
+
         function efetuarLogin(event) {
             event.preventDefault();
+            
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
             const erroMsg = document.getElementById('login-error');
@@ -1132,22 +1546,31 @@
             }
         }
 
-        // Aperta o botão vermelho pra esconder a interface de novo
         function efetuarLogout() {
             document.getElementById('meu-app-container').classList.add('d-none');
             document.getElementById('login-screen').classList.remove('d-none');
+            
+            // Segurança básica: limpa as forms do login anterior
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
 
-        // Sistema simples de abas: apaga todas e mostra só a que foi chamada pelo menu inferior
         function navegar(tela) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
-            document.querySelectorAll('.meu-menu-layout a').forEach(link => link.classList.remove('active'));
+            
+            const views = document.querySelectorAll('.view-section');
+            views.forEach(function(sec) {
+                sec.classList.add('d-none');
+            });
+            
+            const botoesMenu = document.querySelectorAll('.meu-menu-layout a');
+            botoesMenu.forEach(function(link) {
+                link.classList.remove('active');
+            });
+            
             document.getElementById(`tela-${tela}`).classList.remove('d-none');
             document.getElementById(`menu-${tela}`).classList.add('active');
 
-            // Bônus: Recarrega as caixinhas de dados pra não precisar dar F5 na tela
+            // Hook UX Automático: Refaz as caixas de seleção por comodidade
             if (tela === 'vendas') { 
                 carregarSelectsVenda();
             }
