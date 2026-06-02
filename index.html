@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <style>
-        /* CSS Reset e Configurações Globais */
+        /* Ajustes visuais básicos para a tela ocupar 100% e não bugar no celular */
         html, body {
             margin: 0;
             padding: 0;
@@ -25,7 +25,7 @@
             background-color: #f8f9fa;
         }
 
-        /* Estilos View Login */
+        /* Deixa a tela de login bonitona com a imagem de fundo */
         #login-screen {
             background-color: #333;
             background-image: url('img/fundo_login.jpeg');
@@ -33,7 +33,7 @@
             background-position: center;
         }
 
-        /* Estrutura Principal (Flexbox) */
+        /* Estrutura principal do app (menu + conteúdo) */
         #meu-app-container {
             display: flex;
             flex-direction: column-reverse; 
@@ -41,6 +41,7 @@
             height: 100vh;
         }
 
+        /* Área onde as telas aparecem e rolam para baixo */
         .meu-conteudo-layout {
             flex: 1;
             overflow-y: auto;
@@ -49,7 +50,7 @@
             background-color: #f8f9fa;
         }
 
-        /* Sidebar - Default (Mobile) */
+        /* O famoso menu inferior no celular */
         .meu-menu-layout {
             height: 65px;
             background-color: #212529;
@@ -70,17 +71,28 @@
             align-items: center;
         }
 
+        /* Cor azulzinha de quando o menu tá selecionado */
         .meu-menu-layout a.active {
             color: #0d6efd;
         }
 
+        /* Escondemos texto no celular para caber os ícones certinho */
         .meu-menu-layout span, 
         .meu-menu-layout .logo-desktop, 
         .meu-menu-layout button {
             display: none;
         }
 
-        /* Media Queries - Desktop */
+        /* Aquele selo que mostra se tem internet ou não, fixo lá no topo */
+        .sync-badge { 
+            position: fixed; 
+            top: 15px; 
+            right: 15px; 
+            z-index: 1050; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        }
+
+        /* Regras para telas grandes (caso a gente abra em um tablet ou algo maior depois) */
         @media (min-width: 768px) {
             #meu-app-container {
                 flex-direction: row;
@@ -144,7 +156,7 @@
             <div class="card-body p-4 p-md-5">
                 <h3 class="card-title text-center mb-4 text-primary fw-bold">Loja de Camisas do Pedro</h3>
                 <div id="login-error" class="alert alert-danger d-none text-center" role="alert">
-                    Usuário ou senha incorretos!
+                    Poxa, o usuário ou a senha estão incorretos! Tenta de novo.
                 </div>
                 <form id="form-login" onsubmit="efetuarLogin(event)">
                     <div class="mb-3">
@@ -155,7 +167,7 @@
                         <label for="password" class="form-label">Senha</label>
                         <input type="password" id="password" class="form-control" required placeholder="Sua senha">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar no Caixa</button>
                 </form>
             </div>
         </div>
@@ -163,19 +175,23 @@
 
     <div id="meu-app-container" class="d-none">
 
+        <div id="status-conexao" class="sync-badge badge bg-secondary px-3 py-2 fs-6 rounded-pill d-none">
+            <i class="bi bi-wifi-off me-1"></i> Sem Internet
+        </div>
+
         <div class="meu-conteudo-layout">
             
             <section id="tela-home" class="view-section">
                 <div class="card shadow-sm border-0 p-4 p-md-5 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
                     <img src="img/logo.jpg" alt="Logo" class="img-fluid mb-4 shadow-sm" style="max-width: 450px; border-radius: 15px;">
                     <h2 class="text-dark fs-3 fs-md-2 fw-bold mb-2">Terminal de Vendas</h2>
-                    <p class="text-muted fs-5">Caixa livre! Selecione uma opção no menu.</p>
+                    <p class="text-muted fs-5">Caixa livre! Arquitetura Offline-First Ativa.</p>
                 </div>
             </section>
 
             <section id="tela-clientes" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4 mb-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="cliente-form-title">Cadastrar Novo Cliente</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="cliente-form-title">Cadastrar um Novo Cliente</h2>
                     <form id="form-cliente" onsubmit="salvarCliente(event)">
                         <input type="hidden" id="edit-cli-id">
                         <div class="row g-3">
@@ -193,14 +209,14 @@
                             </div>
                             <div class="col-12 text-end mt-4">
                                 <button type="button" id="btn-cancelar-cli" class="btn btn-secondary d-none me-2" onclick="resetarFormCliente()">Cancelar</button>
-                                <button type="submit" id="btn-salvar-cli" class="btn btn-primary w-100 w-md-auto">Salvar Cliente</button>
+                                <button type="submit" id="btn-salvar-cli" class="btn btn-primary w-100 w-md-auto">Salvar Cadastro</button>
                             </div>
                         </div>
                     </form>
                 </div>
 
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h3 class="h5 mb-3">Clientes Cadastrados</h3>
+                    <h3 class="h5 mb-3">Base de Clientes</h3>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
@@ -209,11 +225,11 @@
                                     <th>E-mail</th>
                                     <th>CPF</th>
                                     <th>Pontos</th>
-                                    <th class="text-end">Ações</th>
+                                    <th class="text-end">O que fazer?</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-clientes-render">
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -221,12 +237,12 @@
 
             <section id="tela-produtos" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4 mb-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="produto-form-title">Cadastrar Novo Produto</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark" id="produto-form-title">Adicionar Camisa ao Catálogo</h2>
                     <form id="form-produto" onsubmit="salvarProduto(event)">
                         <input type="hidden" id="edit-prod-id">
                         <div class="row g-3">
                             <div class="col-12 col-md-5">
-                                <label for="prod-nome" class="form-label">Nome do Produto</label>
+                                <label for="prod-nome" class="form-label">Modelo da Camisa</label>
                                 <input type="text" id="prod-nome" class="form-control" required>
                             </div>
                             <div class="col-12 col-md-3">
@@ -234,7 +250,7 @@
                                 <input type="number" step="0.01" id="prod-preco" class="form-control" required>
                             </div>
                             <div class="col-12 col-md-4">
-                                <label for="prod-foto" class="form-label">Foto do Produto</label>
+                                <label for="prod-foto" class="form-label">Foto dela</label>
                                 <input type="file" id="prod-foto" class="form-control" accept="image/*" onchange="previewImage(event)">
                             </div>
                             <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
@@ -243,55 +259,56 @@
                                 </div>
                                 <div class="w-100 w-md-auto text-end">
                                     <button type="button" id="btn-cancelar-prod" class="btn btn-secondary d-none me-2" onclick="resetarFormProduto()">Cancelar</button>
-                                    <button type="submit" id="btn-salvar-prod" class="btn btn-primary w-100 w-md-auto">Salvar Produto</button>
+                                    <button type="submit" id="btn-salvar-prod" class="btn btn-primary w-100 w-md-auto">Colocar à Venda</button>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
 
-                <h3 class="h5 mb-3 text-dark">Catálogo de Produtos</h3>
+                <h3 class="h5 mb-3 text-dark">Nossas Camisas</h3>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 g-md-4" id="lista-produtos-render">
-                </div>
+                    </div>
             </section>
 
             <section id="tela-vendas" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h2 class="h5 border-bottom pb-2 mb-4 text-dark">Registrar Nova Venda <small class="text-muted fs-6 d-block d-md-inline">(Ganha +150 pts)</small></h2>
+                    <h2 class="h5 border-bottom pb-2 mb-4 text-dark">Registrar Nova Venda <small class="text-muted fs-6 d-block d-md-inline">(Rende 150 pts de brinde)</small></h2>
                     <div class="row g-4">
+                        
                         <div class="col-12 col-lg-5">
                             <div class="mb-3">
-                                <label for="venda-cliente" class="form-label fw-semibold">1. Selecione o Cliente</label>
+                                <label for="venda-cliente" class="form-label fw-semibold">1. Quem está comprando?</label>
                                 <select id="venda-cliente" class="form-select" required>
-                                    <option value="">-- Escolha --</option>
+                                    <option value="">-- Escolhe o sortudo --</option>
                                 </select>
                             </div>
 
                             <div class="card bg-light border p-3 mt-4">
-                                <h5 class="h6 mb-3 text-secondary">2. Adicionar ao Carrinho</h5>
+                                <h5 class="h6 mb-3 text-secondary">2. Carrinho de Compras</h5>
                                 <div class="mb-3">
-                                    <label for="venda-produto" class="form-label">Produto</label>
+                                    <label for="venda-produto" class="form-label">O que ele quer?</label>
                                     <select id="venda-produto" class="form-select">
-                                        <option value="">-- Escolha --</option>
+                                        <option value="">-- Escolhe a camisa --</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="venda-qtd" class="form-label">Qtd</label>
+                                    <label for="venda-qtd" class="form-label">Quantas?</label>
                                     <input type="number" id="venda-qtd" class="form-control" value="1" min="1">
                                 </div>
                                 <button type="button" class="btn btn-secondary w-100" onclick="adicionarAoCarrinho()">
-                                    <i class="bi bi-plus-circle me-1"></i> Adicionar
+                                    <i class="bi bi-plus-circle me-1"></i> Jogar no Carrinho
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-7">
-                            <h5 class="h6 fw-semibold mb-3 mt-4 mt-lg-0">Resumo da Venda</h5>
+                            <h5 class="h6 fw-semibold mb-3 mt-4 mt-lg-0">A conta até agora</h5>
                             <div class="table-responsive bg-white border rounded mb-3" style="min-height: 150px;">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Produto</th>
+                                            <th>Item</th>
                                             <th width="60">Qtd</th>
                                             <th>Preço</th>
                                             <th width="50"></th>
@@ -302,11 +319,11 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded">
-                                <span class="fw-bold fs-6 fs-md-5 text-dark">Total:</span>
+                                <span class="fw-bold fs-6 fs-md-5 text-dark">Totalzão:</span>
                                 <span class="fw-bold fs-5 fs-md-4 text-success">R$ <span id="venda-total-geral">0.00</span></span>
                             </div>
                             <button type="button" class="btn btn-success w-100 mt-3 py-3 fs-5 fw-bold shadow-sm" onclick="finalizarVenda()">
-                                <i class="bi bi-check2-circle me-2"></i> Concluir Venda
+                                <i class="bi bi-check2-circle me-2"></i> Bater o Martelo (Vender)
                             </button>
                             <div id="qrcode" class="d-flex justify-content-center mt-4"></div>
                         </div>
@@ -316,16 +333,16 @@
 
             <section id="tela-lista-vendas" class="view-section d-none">
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Histórico de Vendas</h2>
+                    <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Histórico das Vendas Realizadas</h2>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle" style="min-width: 350px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th class="d-none d-md-table-cell">ID</th>
-                                    <th class="d-none d-md-table-cell">Data</th>
-                                    <th>Cliente</th>
-                                    <th>Produtos</th>
-                                    <th class="text-end">Total</th>
+                                    <th class="d-none d-md-table-cell">Código da Venda</th>
+                                    <th class="d-none d-md-table-cell">Quando foi?</th>
+                                    <th>Comprador</th>
+                                    <th>Itens levados</th>
+                                    <th class="text-end">Valor R$</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-vendas-render">
@@ -339,46 +356,46 @@
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-md-5">
                         <div class="card shadow-sm border-0 p-3 p-md-4 h-100">
-                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Novo Brinde</h2>
+                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Criar uma Nova Recompensa</h2>
                             <form id="form-brinde" onsubmit="salvarBrinde(event)">
                                 <div class="mb-3">
-                                    <label class="form-label">Nome do Brinde</label>
-                                    <input type="text" id="brinde-nome" class="form-control" required placeholder="Ex: Caneca">
+                                    <label class="form-label">O que é o brinde?</label>
+                                    <input type="text" id="brinde-nome" class="form-control" required placeholder="Ex: Chaveiro da Sorte">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Custo (Pontos)</label>
+                                    <label class="form-label">Custa quantos pontos?</label>
                                     <input type="number" id="brinde-custo" class="form-control" min="1" required placeholder="Ex: 300">
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Salvar Brinde</button>
+                                <button type="submit" class="btn btn-primary w-100">Registrar Recompensa</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="col-12 col-md-7">
                         <div class="card shadow-sm border-0 p-3 p-md-4 h-100">
-                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Efetuar Resgate</h2>
+                            <h2 class="h5 border-bottom pb-2 mb-3 text-dark">Hora do Cliente Resgatar</h2>
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">1. Cliente</label>
+                                    <label class="form-label fw-semibold">1. Quem quer trocar pontos?</label>
                                     <select id="resgate-cliente" class="form-select" onchange="atualizarPontosVisiveis()" required>
-                                        <option value="">-- Escolha --</option>
+                                        <option value="">-- Puxa o cliente aqui --</option>
                                     </select>
                                 </div>
                                 <div class="col-12 my-2">
                                     <div class="p-3 bg-light border rounded d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold text-secondary">Saldo:</span>
+                                        <span class="fw-bold text-secondary">Pontos disponíveis dele:</span>
                                         <span class="fs-5 fw-bold text-primary" id="resgate-saldo-pontos">0 pts</span>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">2. Brinde</label>
+                                    <label class="form-label fw-semibold">2. Qual brinde ele quer?</label>
                                     <select id="resgate-brinde" class="form-select" required>
-                                        <option value="">-- Escolha --</option>
+                                        <option value="">-- Puxa a lista de prêmios --</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <button type="button" class="btn btn-success w-100 py-2 fw-bold" onclick="comprarBrinde()">
-                                        <i class="bi bi-gift-fill me-2"></i> Confirmar
+                                        <i class="bi bi-gift-fill me-2"></i> Entregar Prêmio
                                     </button>
                                 </div>
                             </div>
@@ -387,15 +404,15 @@
                 </div>
 
                 <div class="card shadow-sm border-0 p-3 p-md-4">
-                    <h3 class="h5 mb-3 text-dark">Histórico de Resgates</h3>
+                    <h3 class="h5 mb-3 text-dark">Lista de Prêmios Entregues</h3>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle" style="min-width: 500px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Data</th>
-                                    <th>Cliente</th>
-                                    <th>Brinde</th>
-                                    <th class="text-end">Pontos</th>
+                                    <th>Data da troca</th>
+                                    <th>Sortudo</th>
+                                    <th>Brinde levado</th>
+                                    <th class="text-end">Custou</th>
                                 </tr>
                             </thead>
                             <tbody id="lista-resgates-render">
@@ -429,7 +446,7 @@
             </a>
             
             <button class="btn btn-danger" onclick="efetuarLogout()">
-                <i class="bi bi-box-arrow-right"></i> <span class="ms-1">Sair</span>
+                <i class="bi bi-box-arrow-right"></i> <span class="ms-1">Deslogar</span>
             </button>
         </div>
 
@@ -438,109 +455,426 @@
     <script src="cordova.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="js/firebase.js"></script>
-    <script src="js/database.js"></script>
 
     <script>
-        // Inicialização de variáveis locais
-        let clientes = JSON.parse(localStorage.getItem('db_bootstrap_clientes')) || [];
-        let produtos = JSON.parse(localStorage.getItem('db_bootstrap_produtos')) || [];
-        let vendas = JSON.parse(localStorage.getItem('db_bootstrap_vendas')) || [];
-        let brindes = JSON.parse(localStorage.getItem('db_bootstrap_brindes')) || [];
-        let resgates = JSON.parse(localStorage.getItem('db_bootstrap_resgates')) || [];
+        // =========================================================================
+        // A PORTA DE ENTRADA PRO BANCO NA NUVEM
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "seu-projeto.firebaseapp.com",
+            databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com",
+            projectId: "seu-projeto",
+            storageBucket: "seu-projeto.appspot.com",
+            messagingSenderId: "123",
+            appId: "1:123:web:456"
+        };
+        
+        // Evita que o Firebase tente se conectar duas vezes seguidas
+        if (!firebase.apps.length) { 
+            firebase.initializeApp(firebaseConfig); 
+        }
+        const firebaseDB = firebase.database();
+
+        // Variáveis globais para guardar a bagunça na memória do app
+        let db;
+        let clientes = [];
+        let produtos = [];
+        let vendas = [];
+        let brindes = [];
+        let resgates = [];
         let carrinho = [];
         let fotoBase64Tmp = "";
-
         let appInicializado = false;
 
+        // =========================================================================
+        // DANDO A PARTIDA NO MOTOR: Quando o Android libera o app para uso
+        // =========================================================================
+        document.addEventListener('deviceready', inicializarSistema, false);
+
         function inicializarSistema() {
+            // Se já ligou uma vez, não tenta ligar de novo
             if (appInicializado) return;
             appInicializado = true;
 
-            clientes = clientes.map(c => ({ ...c, pontos: c.pontos || 0 }));
-            localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
+            // Abre a gaveta do SQLite nativo dentro do celular
+            db = window.sqlitePlugin.openDatabase({ name: 'loja.db', location: 'default' });
 
-            renderizarClientes();
-            renderizarHistoricoVendas();
-            renderizarBrindesEResgates();
+            prepararTabelasSQLite();
 
-            setTimeout(function() {
-                if (typeof db !== 'undefined' && db !== null) {
-                    renderizarProdutos();
-                }
-            }, 500);
+            // Adiciona dois fofoqueiros para ver se a internet caiu ou voltou (Exigência do PDF)
+            document.addEventListener("online", function() {
+                atualizarStatusRede();
+                sincronizarParaNuvem(); 
+            }, false);
+            document.addEventListener("offline", atualizarStatusRede, false);
+            
+            atualizarStatusRede();
+            baixarProdutosDaNuvem();
+            iniciarSincronizacaoDownstream(); 
         }
 
-        document.addEventListener('deviceready', inicializarSistema, false);
-        window.addEventListener('load', inicializarSistema, false);
+        // Pinta a badge de cima de vermelho (sem rede) ou verdinho (online)
+        function atualizarStatusRede() {
+            const badge = document.getElementById('status-conexao');
+            badge.classList.remove('d-none');
+            
+            const isOnline = navigator.connection ? (navigator.connection.type !== Connection.NONE) : navigator.onLine;
 
-        // Controladores de Sessão
-        function efetuarLogin(event) {
-            event.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const erroMsg = document.getElementById('login-error');
-
-            if (user === 'admin' && pass === '1234') {
-                erroMsg.classList.add('d-none');
-                document.getElementById('login-screen').classList.add('d-none');
-                document.getElementById('meu-app-container').classList.remove('d-none');
+            if (isOnline) {
+                badge.innerHTML = `<i class="bi bi-wifi me-1"></i> Estamos Online`;
+                badge.classList.replace('bg-secondary', 'bg-success');
+                badge.classList.replace('bg-danger', 'bg-success');
             } else {
-                erroMsg.classList.remove('d-none');
+                badge.innerHTML = `<i class="bi bi-wifi-off me-1"></i> Fomos pro Modo Offline`;
+                badge.classList.replace('bg-success', 'bg-danger');
             }
         }
 
-        function efetuarLogout() {
-            document.getElementById('meu-app-container').classList.add('d-none');
-            document.getElementById('login-screen').classList.remove('d-none');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
+        // Cria as tabelas do zero na primeira vez que o vendedor instala o app
+        function prepararTabelasSQLite() {
+            db.transaction(function(tx) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS clientes (id unique, nome, email, cpf, pontos INTEGER, sincronizado INTEGER)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS vendas (id unique, data, cliente_nome, itens, total REAL, sincronizado INTEGER)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS brindes (id unique, nome, custo INTEGER, sincronizado INTEGER)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS resgates (id unique, data, cliente_nome, brinde_nome, custo INTEGER, sincronizado INTEGER)');
+            }, function(error){ 
+                console.error("Ih, deu erro na montagem do banco: " + error.message); 
+            }, function(){
+                carregarListasLocais();
+            });
         }
 
-        // Navegação de Telas
-        function navegar(tela) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
-            document.querySelectorAll('.meu-menu-layout a').forEach(link => link.classList.remove('active'));
-            document.getElementById(`tela-${tela}`).classList.remove('d-none');
-            document.getElementById(`menu-${tela}`).classList.add('active');
+        // =========================================================================
+        // OFFLINE-FIRST: PRIMEIRO SALVA NO APARELHO (Sincronizado = 0)
+        // Isso aqui garante que o app nunca trave se faltar sinal
+        // =========================================================================
 
-            if (tela === 'vendas') { carregarSelectsVenda(); }
-            if (tela === 'lista-vendas') { renderizarHistoricoVendas(); }
-            if (tela === 'fidelidade') { carregarSelectsFidelidade(); renderizarBrindesEResgates(); }
-            if (tela === 'produtos') { baixarProdutosDaNuvem(); }
-        }
-
-        // Processamento de Imagens
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function () {
-                const output = document.getElementById('img-preview');
-                output.src = reader.result;
-                output.style.display = 'block';
-                fotoBase64Tmp = reader.result;
-            }
-            if (event.target.files[0]) {
-                reader.readAsDataURL(event.target.files[0]);
-            }
-        }
-
-        // Módulo: Clientes
         function salvarCliente(event) {
             event.preventDefault();
-            const id = document.getElementById('edit-cli-id').value;
+            const idForm = document.getElementById('edit-cli-id').value;
+            const id = idForm || Date.now().toString(); // Se não tem id, gera um novinho pela data
             const nome = document.getElementById('cli-nome').value;
             const email = document.getElementById('cli-email').value;
             const cpf = document.getElementById('cli-cpf').value;
-
-            if (id) {
-                clientes = clientes.map(c => c.id == id ? { id: Number(id), nome, email, cpf, pontos: c.pontos } : c);
-            } else {
-                clientes.push({ id: Date.now(), nome, email, cpf, pontos: 0 });
+            
+            // Mantém os pontos que ele já tinha pra não zerar sem querer
+            let pontosAtuais = 0;
+            if (idForm) {
+                const c = clientes.find(item => item.id == idForm);
+                if (c) pontosAtuais = c.pontos || 0;
             }
 
-            localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
-            resetarFormCliente();
-            renderizarClientes();
+            db.transaction(function(tx) {
+                // Guarda lá dentro e marca com o selo "0", que significa pendente pra subir
+                tx.executeSql('INSERT OR REPLACE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                [id, nome, email, cpf, pontosAtuais], function() {
+                    resetarFormCliente();
+                    alert("Cliente cadastrado, chefe!");
+                    carregarListasLocais();
+                    sincronizarParaNuvem(); 
+                });
+            });
+        }
+
+        function finalizarVenda() {
+            const clienteId = document.getElementById('venda-cliente').value;
+            
+            // Tratamento das vaciladas (esquecer de selecionar algo)
+            if (!clienteId) { 
+                alert('Opa, faltou dizer quem é o cliente dessa venda.'); 
+                return; 
+            }
+            if (carrinho.length === 0) { 
+                alert('Carrinho de vento não dá lucro, coloca um produto aí!'); 
+                return; 
+            }
+
+            const clienteObjeto = clientes.find(c => c.id == clienteId);
+            const total = parseFloat(document.getElementById('venda-total-geral').innerText);
+            const resumoItens = carrinho.map(i => `${i.produto.nome} (${i.qtd}x)`).join(', ');
+            
+            const id = "VND-" + Date.now();
+            const dataVenda = new Date().toLocaleString('pt-BR');
+
+            // Fechando a conta no SQLite
+            db.transaction(function(tx) {
+                tx.executeSql('INSERT INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                [id, dataVenda, clienteObjeto.nome, resumoItens, total], function() {
+                    
+                    // Presente de gratidão: ganha 150 pontos a cada compra
+                    tx.executeSql('UPDATE clientes SET pontos = pontos + 150, sincronizado = 0 WHERE id = ?', [clienteId]);
+                    
+                    gerarQrCodePix(total); 
+                    alert(`Show de bola! Venda salva.\nJá joguei o código PIX na tela. Valor: R$ ${total.toFixed(2)}`);
+
+                    // Limpa a mesa pra próxima venda
+                    carrinho = [];
+                    renderizarCarrinho();
+                    document.getElementById('venda-cliente').value = "";
+                    document.getElementById('venda-produto').value = "";
+                    document.getElementById('venda-qtd').value = "1";
+                    carregarListasLocais();
+                    sincronizarParaNuvem();
+                });
+            });
+        }
+
+        function salvarBrinde(event) {
+            event.preventDefault();
+            const id = "BRD-" + Date.now();
+            const nome = document.getElementById('brinde-nome').value;
+            const custo = parseInt(document.getElementById('brinde-custo').value);
+            
+            db.transaction(function(tx) {
+                tx.executeSql('INSERT INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 0)', [id, nome, custo], function() {
+                    document.getElementById('form-brinde').reset();
+                    alert("Recompensa liberada na base!");
+                    carregarListasLocais();
+                    sincronizarParaNuvem();
+                });
+            });
+        }
+
+        function comprarBrinde() {
+            const clienteId = document.getElementById('resgate-cliente').value;
+            const brindeId = document.getElementById('resgate-brinde').value;
+            
+            if (!clienteId || !brindeId) { 
+                alert("Escolhe aí o cliente e qual vai ser a lembrancinha."); 
+                return; 
+            }
+
+            const cliente = clientes.find(c => c.id == clienteId);
+            const brinde = brindes.find(b => b.id == brindeId);
+
+            // Se o cara tentar dar um golpe e não tiver saldo, a gente bloqueia
+            if (cliente.pontos < brinde.custo) {
+                alert(`Ih rapáz, o saldo tá curto!\nO ${cliente.nome} só tem ${cliente.pontos} pontos, e precisa de ${brinde.custo}.`);
+                return;
+            }
+
+            const id = "RSG-" + Date.now();
+            const dataResgate = new Date().toLocaleString('pt-BR');
+
+            db.transaction(function(tx) {
+                tx.executeSql('INSERT INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 0)', 
+                [id, dataResgate, cliente.nome, brinde.nome, brinde.custo], function() {
+                    
+                    // Cobrando do saldo dele no banco local
+                    tx.executeSql('UPDATE clientes SET pontos = pontos - ?, sincronizado = 0 WHERE id = ?', [brinde.custo, cliente.id]);
+                    alert(`Troca feita! Brinde entregue.`);
+                    carregarListasLocais();
+                    sincronizarParaNuvem();
+                });
+            });
+        }
+
+        function excluirCliente(id) {
+            if (confirm("Você quer mandar esse cliente embora do banco de dados pra sempre?")) {
+                db.transaction(function(tx) {
+                    tx.executeSql('DELETE FROM clientes WHERE id = ?', [id], function() {
+                        firebaseDB.ref('clientes/' + id).remove();
+                        carregarListasLocais();
+                    });
+                });
+            }
+        }
+
+        // =========================================================================
+        // A ROTINA DE ENVIO: Pega tudo com 0 e manda pro Firebase
+        // =========================================================================
+
+        function sincronizarParaNuvem() {
+            // Se estivermos numa roça sem internet, ele nem tenta mandar
+            const isOnline = navigator.connection ? (navigator.connection.type !== Connection.NONE) : navigator.onLine;
+            if (!isOnline) return;
+
+            db.transaction(function(tx) {
+                
+                // Pega a galera nova que foi cadastrada offline
+                tx.executeSql('SELECT * FROM clientes WHERE sincronizado = 0', [], function(tx, rs) {
+                    for (let i = 0; i < rs.rows.length; i++) {
+                        let c = rs.rows.item(i);
+                        // Sobe pra nuvem
+                        firebaseDB.ref('clientes/' + c.id).set({ id: c.id, nome: c.nome, email: c.email, cpf: c.cpf, pontos: c.pontos })
+                        .then(() => {
+                            // Deu certo? Tira a etiqueta pendente no SQLite (Muda pra 1)
+                            db.transaction(function(tx2) {
+                                tx2.executeSql('UPDATE clientes SET sincronizado = 1 WHERE id = ?', [c.id], carregarListasLocais);
+                            });
+                        });
+                    }
+                });
+
+                // Puxa as vendas da memória temporária e atira pro Firebase
+                tx.executeSql('SELECT * FROM vendas WHERE sincronizado = 0', [], function(tx, rs) {
+                    for (let i = 0; i < rs.rows.length; i++) {
+                        let v = rs.rows.item(i);
+                        firebaseDB.ref('vendas/' + v.id).set({ id: v.id, data: v.data, cliente_nome: v.cliente_nome, itens: v.itens, total: v.total })
+                        .then(() => {
+                            db.transaction(function(tx2) {
+                                tx2.executeSql('UPDATE vendas SET sincronizado = 1 WHERE id = ?', [v.id], carregarListasLocais);
+                            });
+                        });
+                    }
+                });
+
+                // Faz a mesma coisa com a lista de brindes
+                tx.executeSql('SELECT * FROM brindes WHERE sincronizado = 0', [], function(tx, rs) {
+                    for (let i = 0; i < rs.rows.length; i++) {
+                        let b = rs.rows.item(i);
+                        firebaseDB.ref('brindes/' + b.id).set({ id: b.id, nome: b.nome, custo: b.custo })
+                        .then(() => {
+                            db.transaction(function(tx2) {
+                                tx2.executeSql('UPDATE brindes SET sincronizado = 1 WHERE id = ?', [b.id], carregarListasLocais);
+                            });
+                        });
+                    }
+                });
+
+                // Sobe os registros de quem pegou os brindes
+                tx.executeSql('SELECT * FROM resgates WHERE sincronizado = 0', [], function(tx, rs) {
+                    for (let i = 0; i < rs.rows.length; i++) {
+                        let r = rs.rows.item(i);
+                        firebaseDB.ref('resgates/' + r.id).set({ id: r.id, data: r.data, cliente_nome: r.cliente_nome, brinde_nome: r.brinde_nome, custo: r.custo })
+                        .then(() => {
+                            db.transaction(function(tx2) {
+                                tx2.executeSql('UPDATE resgates SET sincronizado = 1 WHERE id = ?', [r.id], carregarListasLocais);
+                            });
+                        });
+                    }
+                });
+            });
+        }
+
+        // =========================================================================
+        // O CÃO DE GUARDA DA NUVEM: Vê tudo o que mudou lá e salva no aparelho
+        // Usamos o "INSERT OR IGNORE" pra transação não morrer no meio do caminho
+        // =========================================================================
+        
+        function iniciarSincronizacaoDownstream() {
+            
+            firebaseDB.ref('clientes').on('value', snapshot => {
+                if (!snapshot.exists()) return;
+                const data = Object.values(snapshot.val());
+                db.transaction(function(tx) {
+                    data.forEach(c => {
+                        // Tenta guardar. Se ele já existe, só deixa passar.
+                        tx.executeSql('INSERT OR IGNORE INTO clientes (id, nome, email, cpf, pontos, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [c.id, c.nome, c.email, c.cpf, c.pontos]);
+                        // Caso a gente tenha atualizado alguma coisa dele online
+                        tx.executeSql('UPDATE clientes SET nome = ?, email = ?, cpf = ?, pontos = ? WHERE id = ? AND sincronizado = 1', [c.nome, c.email, c.cpf, c.pontos, c.id]);
+                    });
+                }, function(error) { console.error("Pane ao puxar clientes: ", error); }, carregarListasLocais);
+            });
+
+            firebaseDB.ref('vendas').on('value', snapshot => {
+                if (!snapshot.exists()) return;
+                const data = Object.values(snapshot.val());
+                db.transaction(function(tx) {
+                    data.forEach(v => {
+                        tx.executeSql('INSERT OR IGNORE INTO vendas (id, data, cliente_nome, itens, total, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [v.id, v.data, v.cliente_nome, v.itens, v.total]);
+                    });
+                }, function(error) { console.error("Pane ao puxar as vendas: ", error); }, carregarListasLocais);
+            });
+
+            firebaseDB.ref('brindes').on('value', snapshot => {
+                if (!snapshot.exists()) return;
+                const data = Object.values(snapshot.val());
+                db.transaction(function(tx) {
+                    data.forEach(b => {
+                        tx.executeSql('INSERT OR IGNORE INTO brindes (id, nome, custo, sincronizado) VALUES (?, ?, ?, 1)', [b.id, b.nome, b.custo]);
+                        tx.executeSql('UPDATE brindes SET nome = ?, custo = ? WHERE id = ? AND sincronizado = 1', [b.nome, b.custo, b.id]);
+                    });
+                }, function(error) { console.error("Pane ao puxar os brindes: ", error); }, carregarListasLocais);
+            });
+
+            firebaseDB.ref('resgates').on('value', snapshot => {
+                if (!snapshot.exists()) return;
+                const data = Object.values(snapshot.val());
+                db.transaction(function(tx) {
+                    data.forEach(r => {
+                        tx.executeSql('INSERT OR IGNORE INTO resgates (id, data, cliente_nome, brinde_nome, custo, sincronizado) VALUES (?, ?, ?, ?, ?, 1)', [r.id, r.data, r.cliente_nome, r.brinde_nome, r.custo]);
+                    });
+                }, function(error) { console.error("Pane ao puxar os resgates: ", error); }, carregarListasLocais);
+            });
+        }
+
+        // =========================================================================
+        // DESENHANDO A TELA: Puxando o que tá no celular pra montar os botões
+        // =========================================================================
+
+        function carregarListasLocais() {
+            db.transaction(function(tx) {
+                
+                tx.executeSql('SELECT * FROM clientes', [], function(tx, rs) {
+                    clientes = [];
+                    for(let i=0; i<rs.rows.length; i++) { clientes.push(rs.rows.item(i)); }
+                    renderizarClientes();
+                    carregarSelectsVenda();
+                    carregarSelectsFidelidade();
+                });
+
+                tx.executeSql('SELECT * FROM vendas ORDER BY id DESC', [], function(tx, rs) {
+                    vendas = [];
+                    for(let i=0; i<rs.rows.length; i++) { vendas.push(rs.rows.item(i)); }
+                    renderizarHistoricoVendas();
+                });
+
+                tx.executeSql('SELECT * FROM brindes', [], function(tx, rs) {
+                    brindes = [];
+                    for(let i=0; i<rs.rows.length; i++) { brindes.push(rs.rows.item(i)); }
+                    carregarSelectsFidelidade();
+                });
+
+                tx.executeSql('SELECT * FROM resgates ORDER BY id DESC', [], function(tx, rs) {
+                    resgates = [];
+                    for(let i=0; i<rs.rows.length; i++) { resgates.push(rs.rows.item(i)); }
+                    renderizarBrindesEResgates();
+                });
+            });
+        }
+
+        // Os produtos não entram na festa do SQLite, eles ficam consumindo direto do mestre Firebase
+        function baixarProdutosDaNuvem() {
+            firebaseDB.ref('produtos').on('value', snapshot => {
+                if (snapshot.exists()) {
+                    produtos = Object.values(snapshot.val());
+                    renderizarProdutos();
+                    carregarSelectsVenda();
+                }
+            });
+        }
+
+        // =========================================================================
+        // ATUALIZAÇÃO DOS CAMPOS DE HTML (A parte visual pros vendedores)
+        // =========================================================================
+
+        function renderizarClientes() {
+            const tbody = document.getElementById('lista-clientes-render');
+            tbody.innerHTML = '';
+            
+            // Mensagem elegante caso o banco esteja limpo
+            if (clientes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Opa, não temos nenhum cliente cadastrado ainda.</td></tr>`;
+                return;
+            }
+
+            // Vai montando a tabela linha por linha
+            clientes.forEach(c => {
+                let iconeSync = c.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2" title="Seguro na Nuvem"></i>' : '<i class="bi bi-phone text-warning ms-2" title="Só no aparelho"></i>';
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold">${c.nome} ${iconeSync}</td>
+                        <td class="d-none d-md-table-cell">${c.email}</td>
+                        <td>${c.cpf}</td>
+                        <td><span class="badge bg-primary fs-6">${c.pontos || 0} pts</span></td>
+                        <td class="text-end text-nowrap">
+                            <button class="btn btn-sm btn-outline-warning me-1" onclick="editarCliente('${c.id}')"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="excluirCliente('${c.id}')"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>`;
+            });
         }
 
         function editarCliente(id) {
@@ -550,115 +884,68 @@
             document.getElementById('cli-nome').value = c.nome;
             document.getElementById('cli-email').value = c.email;
             document.getElementById('cli-cpf').value = c.cpf;
-            document.getElementById('cliente-form-title').innerText = "Editar Cadastro";
-            document.getElementById('btn-salvar-cli').innerText = "Atualizar";
+            document.getElementById('cliente-form-title').innerText = "Arrumar Ficha do Cliente";
+            document.getElementById('btn-salvar-cli').innerText = "Atualizar Tudo";
             document.getElementById('btn-cancelar-cli').classList.remove('d-none');
-        }
-
-        function excluirCliente(id) {
-            if (confirm("Tem certeza que deseja remover este cliente?")) {
-                clientes = clientes.filter(c => c.id != id);
-                localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
-                renderizarClientes();
-            }
         }
 
         function resetarFormCliente() {
             document.getElementById('form-cliente').reset();
             document.getElementById('edit-cli-id').value = "";
             document.getElementById('cliente-form-title').innerText = "Cadastrar Novo Cliente";
-            document.getElementById('btn-salvar-cli').innerText = "Salvar Cliente";
+            document.getElementById('btn-salvar-cli').innerText = "Salvar Cadastro";
             document.getElementById('btn-cancelar-cli').classList.add('d-none');
         }
 
-        function renderizarClientes() {
-            const tbody = document.getElementById('lista-clientes-render');
+        function renderizarHistoricoVendas() {
+            const tbody = document.getElementById('lista-vendas-render');
             tbody.innerHTML = '';
-            if (clientes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhum cliente cadastrado.</td></tr>`;
+            
+            if (vendas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">O caixa tá limpo, nenhuma venda hoje.</td></tr>`;
                 return;
             }
-            clientes.forEach(c => {
+
+            vendas.forEach(v => {
+                let iconeSync = v.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2"></i>' : '<i class="bi bi-phone text-warning ms-2"></i>';
                 tbody.innerHTML += `
                     <tr>
-                        <td class="fw-bold">${c.nome}</td>
-                        <td class="d-none d-md-table-cell">${c.email}</td>
-                        <td>${c.cpf}</td>
-                        <td><span class="badge bg-primary fs-6">${c.pontos || 0} pts</span></td>
-                        <td class="text-end text-nowrap">
-                            <button class="btn btn-sm btn-outline-warning me-1" onclick="editarCliente(${c.id})"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="excluirCliente(${c.id})"><i class="bi bi-trash"></i></button>
-                        </td>
+                        <td class="font-monospace text-primary fw-bold small d-none d-md-table-cell">${v.id} ${iconeSync}</td>
+                        <td class="small text-secondary d-none d-md-table-cell">${v.data}</td>
+                        <td class="fw-semibold">${v.cliente_nome}</td>
+                        <td class="small" style="max-width: 150px; white-space: normal; word-wrap: break-word;">${v.itens}</td>
+                        <td class="text-end fw-bold text-success text-nowrap">R$ ${v.total.toFixed(2)}</td>
                     </tr>`;
             });
         }
 
-        // Módulo: Produtos
         function salvarProduto(event) {
             event.preventDefault();
-            const id = Date.now();
+            const id = Date.now().toString();
             const nome = document.getElementById('prod-nome').value;
             const preco = parseFloat(document.getElementById('prod-preco').value);
+            // Salva a imagem grandona ou bota um espaço vazio se o cara não enviou nada
             let fotoFinal = fotoBase64Tmp || "https://via.placeholder.com/160?text=Sem+Foto";
 
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO produtos (id, nome, preco, foto, sincronizado) VALUES (?, ?, ?, ?, 0)', 
-                [id, nome, preco, fotoFinal], 
-                function(tx, result) {
-                    resetarFormProduto();
-                    renderizarProdutos();
-
-                    firebaseDB.ref('produtos/' + id).set({
-                        nome: nome,
-                        preco: preco,
-                        foto: fotoFinal
-                    }).then(() => {
-                        db.transaction(txUpdate => {
-                            txUpdate.executeSql('UPDATE produtos SET sincronizado = 1 WHERE id = ?', [id]);
-                        });
-                    }).catch(erro => console.log("Sem net pra subir agora. Fica salvo local.", erro));
-                });
+            const novoProduto = { id, nome, preco, foto: fotoFinal };
+            
+            firebaseDB.ref('produtos/' + id).set(novoProduto).then(() => {
+                resetarFormProduto();
+                alert("Nova camisa ativada na nossa prateleira global!");
             });
         }
 
-        function editarProduto(id) {
-            const p = produtos.find(item => item.id == id);
-            if (!p) return;
-            document.getElementById('edit-prod-id').value = p.id;
-            document.getElementById('prod-nome').value = p.nome || p.name;
-            document.getElementById('prod-preco').value = p.preco;
-            const output = document.getElementById('img-preview');
-            output.src = p.foto;
-            output.style.display = 'block';
-            document.getElementById('produto-form-title').innerText = "Editar Produto";
-            document.getElementById('btn-salvar-prod').innerText = "Atualizar";
-            document.getElementById('btn-cancelar-prod').classList.remove('d-none');
-        }
-
-        function excluirProduto(id) {
-            if (confirm("Deseja realmente apagar esta camisa do catálogo?")) {
-                firebaseDB.ref('produtos/' + id).remove().then(() => {
-                    produtos = produtos.filter(p => p.id != id);
-                    localStorage.setItem('db_bootstrap_produtos', JSON.stringify(produtos));
-                    
-                    try {
-                        if (typeof memoriaPC !== 'undefined') {
-                            memoriaPC = memoriaPC.filter(p => p.id != id);
-                            localStorage.setItem('mock_db_pc', JSON.stringify(memoriaPC));
-                        }
-                    } catch(e) {}
-
-                    try {
-                        db.transaction(function(tx) {
-                            tx.executeSql('DELETE FROM produtos WHERE id = ?', [id]);
-                            tx.executeSql('DELETE FROM produtos WHERE id = ?', [Number(id)]);
-                        });
-                    } catch(e) {}
-
-                    renderizarProdutos();
-                    carregarSelectsVenda();
-                    
-                }).catch(erro => alert("Erro ao apagar da nuvem. Verifique a internet."));
+        // Lê o arquivo do computador e transforma num dado Base64 que a gente consiga salvar
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('img-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                fotoBase64Tmp = reader.result; // Guarda o texto longo da imagem na nossa sacola
+            }
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
             }
         }
 
@@ -668,75 +955,77 @@
             document.getElementById('img-preview').style.display = 'none';
             document.getElementById('img-preview').src = "";
             fotoBase64Tmp = "";
-            document.getElementById('produto-form-title').innerText = "Cadastrar Novo Produto";
-            document.getElementById('btn-salvar-prod').innerText = "Salvar Produto";
+            document.getElementById('produto-form-title').innerText = "Adicionar Camisa ao Catálogo";
+            document.getElementById('btn-salvar-prod').innerText = "Colocar à Venda";
             document.getElementById('btn-cancelar-prod').classList.add('d-none');
         }
 
         function renderizarProdutos() {
             const grid = document.getElementById('lista-produtos-render');
             grid.innerHTML = '';
-            db.transaction(function(tx) {
-                tx.executeSql('SELECT * FROM produtos', [], function(tx, rs) {
-                    produtos = []; 
-                    if (rs.rows.length === 0) {
-                        grid.innerHTML = `<div class="col-12"><div class="alert alert-light text-center border py-4 text-muted w-100">Nenhum produto no catálogo.</div></div>`;
-                        return;
-                    }
-                    for (let i = 0; i < rs.rows.length; i++) {
-                        let p = rs.rows.item(i);
-                        produtos.push(p); 
-                        grid.innerHTML += `
-                            <div class="col">
-                                <div class="card h-100 shadow-sm product-card position-relative">
-                                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="excluirProduto('${p.id}')" style="z-index: 10;">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    
-                                    <div class="product-img-container" style="height: 150px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
-                                        <img src="${p.foto}" class="img-fluid" style="max-height: 100%;" alt="${p.nome}">
-                                    </div>
-                                    <div class="card-body p-2 p-md-3">
-                                        <h5 class="card-title fs-6 text-dark text-truncate mb-1">${p.nome}</h5>
-                                        <p class="card-text fw-bold text-success mb-0">R$ ${p.preco.toFixed(2)}</p>
-                                    </div>
-                                </div>
-                            </div>`;
-                    }
-                });
+            
+            if (produtos.length === 0) {
+                grid.innerHTML = `<div class="col-12"><div class="alert alert-light text-center border py-4 text-muted w-100">Não achamos camisa nenhuma cadastrada.</div></div>`;
+                return;
+            }
+
+            produtos.forEach(p => {
+                grid.innerHTML += `
+                    <div class="col">
+                        <div class="card h-100 shadow-sm product-card position-relative">
+                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="firebaseDB.ref('produtos/' + '${p.id}').remove();" style="z-index: 10;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <div class="product-img-container" style="height: 150px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                                <img src="${p.foto}" class="img-fluid" style="max-height: 100%;" alt="${p.nome}">
+                            </div>
+                            <div class="card-body p-2 p-md-3">
+                                <h5 class="card-title fs-6 text-dark text-truncate mb-1">${p.nome}</h5>
+                                <p class="card-text fw-bold text-success mb-0">R$ ${p.preco.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>`;
             });
         }
 
-        // Módulo: Vendas e PDV
+        // Puxa as listas drop-downs pra facilitar a vida de quem tiver vendendo
         function carregarSelectsVenda() {
             const selectCli = document.getElementById('venda-cliente');
             const selectProd = document.getElementById('venda-produto');
-            selectCli.innerHTML = '<option value="">-- Escolha um cliente --</option>';
-            selectProd.innerHTML = '<option value="">-- Escolha um produto --</option>';
-            clientes.forEach(c => selectCli.innerHTML += `<option value="${c.id}">${c.nome} (CPF: ${c.cpf})</option>`);
-            produtos.forEach(p => selectProd.innerHTML += `<option value="${p.id}">${p.nome} - R$ ${p.preco.toFixed(2)}</option>`);
-            document.getElementById("qrcode").innerHTML = ""; 
+            
+            selectCli.innerHTML = '<option value="">-- Escolhe o sortudo --</option>';
+            selectProd.innerHTML = '<option value="">-- Escolhe a camisa --</option>';
+            
+            clientes.forEach(c => {
+                selectCli.innerHTML += `<option value="${c.id}">${c.nome} (CPF: ${c.cpf})</option>`;
+            });
+            
+            produtos.forEach(p => {
+                selectProd.innerHTML += `<option value="${p.id}">${p.nome} - R$ ${p.preco.toFixed(2)}</option>`;
+            });
         }
 
+        // Lógica dura do carrinho: Bota o item e já soma o valor
         function adicionarAoCarrinho() {
             const prodId = document.getElementById('venda-produto').value;
             const qtd = parseInt(document.getElementById('venda-qtd').value);
-            if (!prodId || qtd <= 0) {
-                alert('Escolha o produto e declare uma quantidade válida.');
-                return;
-            }
+            
+            if (!prodId || qtd <= 0) return;
+            
             const produtoInfo = produtos.find(p => p.id == prodId);
             const itemExistente = carrinho.find(item => item.produto.id == prodId);
             
-            if (itemExistente) { 
-                itemExistente.qtd += qtd; 
-            } else { 
-                carrinho.push({ produto: produtoInfo, qtd: qtd }); 
+            // Se o cara adicionou a mesma camisa de novo, a gente só aumenta o número pra não repetir a linha
+            if (itemExistente) {
+                itemExistente.qtd += qtd;
+            } else {
+                carrinho.push({ produto: produtoInfo, qtd: qtd });
             }
             
             renderizarCarrinho();
         }
 
+        // Devolveu no balcão? A gente arranca daqui
         function removerDoCarrinho(index) {
             carrinho.splice(index, 1);
             renderizarCarrinho();
@@ -750,13 +1039,16 @@
             carrinho.forEach((item, index) => {
                 const subtotal = item.produto.preco * item.qtd;
                 totalGeral += subtotal;
+                
                 cuerpo.innerHTML += `
                     <tr>
                         <td class="small fw-semibold text-truncate" style="max-width: 100px;">${item.produto.nome}</td>
                         <td><span class="badge bg-secondary">${item.qtd}</span></td>
                         <td class="small fw-bold text-dark">R$ ${subtotal.toFixed(2)}</td>
                         <td class="text-end">
-                            <button type="button" class="btn btn-sm text-danger p-0" onclick="removerDoCarrinho(${index})"><i class="bi bi-trash fs-5"></i></button>
+                            <button type="button" class="btn btn-sm text-danger p-0" onclick="removerDoCarrinho(${index})">
+                                <i class="bi bi-trash fs-5"></i>
+                            </button>
                         </td>
                     </tr>`;
             });
@@ -764,82 +1056,20 @@
             document.getElementById('venda-total-geral').innerText = totalGeral.toFixed(2);
         }
 
-        function finalizarVenda() {
-            const clienteId = document.getElementById('venda-cliente').value;
-            
-            if (!clienteId) { 
-                alert('Selecione o comprador (cliente) antes de fechar.'); 
-                return; 
-            }
-            if (carrinho.length === 0) { 
-                alert('O carrinho de compras está vazio.'); 
-                return; 
-            }
-
-            clientes = clientes.map(c => {
-                if (c.id == clienteId) return { ...c, pontos: (c.pontos || 0) + 150 };
-                return c;
-            });
-            localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
-            renderizarClientes();
-
-            const clienteObjeto = clientes.find(c => c.id == clienteId);
-            const total = parseFloat(document.getElementById('venda-total-geral').innerText);
-            const resumoItens = carrinho.map(i => `${i.produto.nome} (${i.qtd}x)`).join(', ');
-
-            const novaVenda = {
-                id: "VND-" + Math.floor(100000 + Math.random() * 900000),
-                data: new Date().toLocaleString('pt-BR'),
-                cliente: clienteObjeto.nome,
-                itens: resumoItens,
-                total: total
-            };
-
-            vendas.unshift(novaVenda);
-            localStorage.setItem('db_bootstrap_vendas', JSON.stringify(vendas));
-
-            gerarQrCodePix(total); 
-            alert(`Sucesso!\nVenda registrada no sistema.\n\nMostre a tela para o cliente escanear o QR Code e pagar R$ ${total.toFixed(2)}.`);
-
-            carrinho = [];
-            renderizarCarrinho();
-            
-            document.getElementById('venda-cliente').value = "";
-            document.getElementById('venda-produto').value = "";
-            document.getElementById('venda-qtd').value = "1";
-        }
-
-        function renderizarHistoricoVendas() {
-            const tbody = document.getElementById('lista-vendas-render');
-            tbody.innerHTML = '';
-            
-            if (vendas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhuma venda registrada.</td></tr>`;
-                return;
-            }
-            
-            vendas.forEach(v => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="font-monospace text-primary fw-bold small d-none d-md-table-cell">${v.id}</td>
-                        <td class="small text-secondary d-none d-md-table-cell">${v.data}</td>
-                        <td class="fw-semibold">${v.cliente}</td>
-                        <td class="small" style="max-width: 150px; white-space: normal; word-wrap: break-word;">${v.itens}</td>
-                        <td class="text-end fw-bold text-success text-nowrap">R$ ${v.total.toFixed(2)}</td>
-                    </tr>`;
-            });
-        }
-
-        // Módulo: Fidelidade e Resgates
         function carregarSelectsFidelidade() {
             const selectCli = document.getElementById('resgate-cliente');
             const selectBrinde = document.getElementById('resgate-brinde');
             
-            selectCli.innerHTML = '<option value="">-- Escolha um cliente --</option>';
-            selectBrinde.innerHTML = '<option value="">-- Escolha um brinde --</option>';
+            selectCli.innerHTML = '<option value="">-- Puxa o cliente aqui --</option>';
+            selectBrinde.innerHTML = '<option value="">-- Puxa a lista de prêmios --</option>';
             
-            clientes.forEach(c => selectCli.innerHTML += `<option value="${c.id}">${c.nome} (Saldo: ${c.pontos || 0} pts)</option>`);
-            brindes.forEach(b => selectBrinde.innerHTML += `<option value="${b.id}">${b.nome} - Custo: ${b.custo} pts</option>`);
+            clientes.forEach(c => {
+                selectCli.innerHTML += `<option value="${c.id}">${c.nome} (Saldo: ${c.pontos || 0} pts)</option>`;
+            });
+            
+            brindes.forEach(b => {
+                selectBrinde.innerHTML += `<option value="${b.id}">${b.nome} - Custo: ${b.custo} pts</option>`;
+            });
             
             atualizarPontosVisiveis();
         }
@@ -857,131 +1087,28 @@
             containerSaldo.innerText = `${cliente.pontos || 0} pts`;
         }
 
-        function salvarBrinde(event) {
-            event.preventDefault();
-            const nome = document.getElementById('brinde-nome').value;
-            const custo = parseInt(document.getElementById('brinde-custo').value);
-            
-            brindes.push({ id: Date.now(), nome, custo });
-            localStorage.setItem('db_bootstrap_brindes', JSON.stringify(brindes));
-            
-            document.getElementById('form-brinde').reset();
-            carregarSelectsFidelidade();
-            
-            alert("Brinde cadastrado com sucesso!");
-        }
-
-        function comprarBrinde() {
-            const clienteId = document.getElementById('resgate-cliente').value;
-            const brindeId = document.getElementById('resgate-brinde').value;
-            
-            if (!clienteId || !brindeId) { 
-                alert("Selecione o cliente e o brinde."); 
-                return; 
-            }
-
-            const cliente = clientes.find(c => c.id == clienteId);
-            const brinde = brindes.find(b => b.id == brindeId);
-
-            if (cliente.pontos < brinde.custo) {
-                alert(`Saldo insuficiente!\n${cliente.nome} possui ${cliente.pontos} pontos, o brinde custa ${brinde.custo}.`);
-                return;
-            }
-
-            clientes = clientes.map(c => {
-                if (c.id == clienteId) return { ...c, pontos: c.pontos - brinde.custo };
-                return c;
-            });
-            
-            localStorage.setItem('db_bootstrap_clientes', JSON.stringify(clientes));
-            renderizarClientes();
-
-            resgates.unshift({
-                id: Date.now(), data: new Date().toLocaleString('pt-BR'),
-                cliente: cliente.nome, brinde: brinde.nome, custo: brinde.custo
-            });
-            localStorage.setItem('db_bootstrap_resgates', JSON.stringify(resgates));
-
-            alert(`Brinde resgatado com sucesso!`);
-            carregarSelectsFidelidade();
-            renderBrindesComprados();
-        }
-
-        function renderBrindesComprados() {
+        function renderizarBrindesEResgates() {
             const tbody = document.getElementById('lista-resgates-render');
             tbody.innerHTML = '';
             
             if (resgates.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Nenhum brinde resgatado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Poxa, ninguém buscou o brinde ainda.</td></tr>`;
                 return;
             }
             
             resgates.forEach(r => {
+                let iconeSync = r.sincronizado === 1 ? '<i class="bi bi-cloud-check text-success ms-2"></i>' : '<i class="bi bi-phone text-warning ms-2"></i>';
                 tbody.innerHTML += `
                     <tr>
-                        <td class="small text-secondary d-none d-md-table-cell">${r.data}</td>
-                        <td class="fw-semibold">${r.cliente}</td>
-                        <td><span class="text-dark fw-medium"><i class="bi bi-gift text-danger me-1"></i> ${r.brinde}</span></td>
+                        <td class="small text-secondary d-none d-md-table-cell">${r.data} ${iconeSync}</td>
+                        <td class="fw-semibold">${r.cliente_nome}</td>
+                        <td><span class="text-dark fw-medium"><i class="bi bi-gift text-danger me-1"></i> ${r.brinde_nome}</span></td>
                         <td class="text-end fw-bold text-danger text-nowrap">-${r.custo} pts</td>
                     </tr>`;
             });
         }
 
-        function renderizarBrindesEResgates() { 
-            renderBrindesComprados(); 
-        }
-
-        // Sincronização Local e Firebase
-        function sincronizarProdutos() {
-            db.transaction(function(tx) {
-                tx.executeSql('SELECT * FROM produtos WHERE sincronizado = 0', [], function(tx, rs) {
-                    for (let i = 0; i < rs.rows.length; i++) {
-                        let p = rs.rows.item(i);
-                        firebaseDB.ref('produtos/' + p.id).set({
-                            nome: p.nome, preco: p.preco, foto: p.foto
-                        }).then(() => {
-                            db.transaction(txUpdate => {
-                                txUpdate.executeSql('UPDATE produtos SET sincronizado = 1 WHERE id = ?', [p.id]);
-                            });
-                        }).catch(erro => console.log("Sem net, fica local.", erro));
-                    }
-                });
-            });
-        }
-
-        window.addEventListener('online', function() {
-            sincronizarProdutos();
-        });
-
-        function baixarProdutosDaNuvem() {
-            firebaseDB.ref('produtos').once('value').then(snapshot => {
-                if (snapshot.exists()) {
-                    const produtosNuvem = snapshot.val();
-                    let idsLocais = produtos.map(p => p.id.toString());
-                    let baixouAlgo = false;
-                    
-                    for (let idFirebase in produtosNuvem) {
-                        if (!idsLocais.includes(idFirebase)) {
-                            let p = produtosNuvem[idFirebase];
-                            db.transaction(tx => {
-                                tx.executeSql('INSERT INTO produtos (id, nome, preco, foto, sincronizado) VALUES (?, ?, ?, ?, 1)', 
-                                [idFirebase, p.nome, p.preco, p.foto]);
-                            });
-                            baixouAlgo = true;
-                        }
-                    }
-                    
-                    if (baixouAlgo) {
-                        setTimeout(() => {
-                            renderizarProdutos();
-                            carregarSelectsVenda(); 
-                        }, 500);
-                    }
-                }
-            }).catch(erro => console.log("Sem internet para baixar novidades.", erro));
-        }
-
-        // Integração de Pagamento
+        // Essa daqui é a mágica de fazer o quadradinho preto aparecer na tela pro cara scanear
         function gerarQrCodePix(valor) {
             const container = document.getElementById("qrcode");
             container.innerHTML = ""; 
@@ -989,6 +1116,45 @@
             new QRCode(container, { text: payloadPix, width: 128, height: 128 });
         }
 
+        // Lógica crua da tela de Login (Trava básica)
+        function efetuarLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const erroMsg = document.getElementById('login-error');
+
+            if (user === 'admin' && pass === '1234') {
+                erroMsg.classList.add('d-none');
+                document.getElementById('login-screen').classList.add('d-none');
+                document.getElementById('meu-app-container').classList.remove('d-none');
+            } else {
+                erroMsg.classList.remove('d-none');
+            }
+        }
+
+        // Aperta o botão vermelho pra esconder a interface de novo
+        function efetuarLogout() {
+            document.getElementById('meu-app-container').classList.add('d-none');
+            document.getElementById('login-screen').classList.remove('d-none');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // Sistema simples de abas: apaga todas e mostra só a que foi chamada pelo menu inferior
+        function navegar(tela) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('d-none'));
+            document.querySelectorAll('.meu-menu-layout a').forEach(link => link.classList.remove('active'));
+            document.getElementById(`tela-${tela}`).classList.remove('d-none');
+            document.getElementById(`menu-${tela}`).classList.add('active');
+
+            // Bônus: Recarrega as caixinhas de dados pra não precisar dar F5 na tela
+            if (tela === 'vendas') { 
+                carregarSelectsVenda();
+            }
+            if (tela === 'fidelidade') { 
+                carregarSelectsFidelidade();
+            }
+        }
     </script>
 </body>
 </html>
